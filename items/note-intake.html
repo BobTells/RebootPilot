@@ -146,8 +146,9 @@
 
                 <fieldset>
                     <legend>2. Where it runs</legend>
-                    <label><input type="radio" name="runtime" value="code" checked> <span>Claude Code (CLI)<span class="hint">Terminal-based agent in a repo. Reads CLAUDE.md / AGENTS.md from disk.</span></span></label>
+                    <label><input type="radio" name="runtime" value="code" checked> <span>Claude Code (CLI)<span class="hint">Terminal-based agent in a repo. Reads CLAUDE.md from disk.</span></span></label>
                     <label><input type="radio" name="runtime" value="desktop"> <span>Claude Desktop<span class="hint">Desktop app. Reads filesystem via connector.</span></span></label>
+                    <label><input type="radio" name="runtime" value="codex-desktop"> <span>Codex Desktop<span class="hint">OpenAI Codex running on your machine. Reads AGENTS.md from disk.</span></span></label>
                     <label><input type="radio" name="runtime" value="online"> <span>Online project<span class="hint">Browser project (claude.ai project, ChatGPT project, etc.). No filesystem &mdash; the file content goes into project instructions instead.</span></span></label>
                     <label><input type="radio" name="runtime" value="other"> <span>Other &mdash; type below<span class="hint">Anything not on the list. The prompt asks the agent to figure out where the persistent-context file lives.</span></span></label>
                     <input class="text-input other-input" id="runtimeOther" type="text" placeholder="e.g., VS Code Copilot CLI, Aider in tmux" hidden>
@@ -249,8 +250,14 @@
         function runtimeLabel() {
             if (state.runtime === "code") return "Claude Code (CLI)";
             if (state.runtime === "desktop") return "Claude Desktop";
+            if (state.runtime === "codex-desktop") return "Codex Desktop";
             if (state.runtime === "online") return "an online project (browser-based, no filesystem)";
             return state.runtimeOther.trim() || "a runtime not on the standard list";
+        }
+
+        function contextFileSpec() {
+            if (state.runtime === "online") return "project instructions / project knowledge area (paste in, no file)";
+            return "project-root " + contextFileName();
         }
 
         function configBlock() {
@@ -258,12 +265,12 @@
             const purpose = state.purpose.trim() || "(not yet specified — grill the user before writing)";
             const scopeOut = state.scopeOut.trim() || "(not specified)";
             return [
-                "- Agent / LLM: " + agentLabel(),
+                "- Agent: " + agentLabel(),
                 "- Runtime: " + runtimeLabel(),
-                "- Persistent-context file: " + contextFileName(),
+                "- Persistent-context file: " + contextFileSpec(),
                 "- System name: " + ws,
                 "- Purpose: " + purpose,
-                "- Explicitly out of scope: " + scopeOut
+                "- Out of scope: " + scopeOut
             ].join("\n");
         }
 
@@ -387,8 +394,8 @@
 
         function buildOperationalPrompt() {
             const loadedLine = state.runtime === "online"
-                ? "- Project instructions / project knowledge (always in scope while the project is open)"
-                : "- " + contextFileName() + " (always-loaded persistent context)";
+                ? "- Project instructions / project knowledge area (always in scope while the project is open)"
+                : "- " + contextFileSpec() + " (always-loaded persistent context)";
             return [
                 "You are " + agentLabel() + " operating with the " + (state.workspaceName.trim() || "MyVault") + " markdown system loaded.",
                 "",
@@ -396,15 +403,15 @@
                 loadedLine,
                 "",
                 "# Behavior",
-                "- Cite the markdown source when applying any rule from the system.",
-                "- If the user's request is outside the loaded scope, say so before acting.",
-                "- Don't invent paths, conventions, or rules that aren't in the loaded content.",
+                "- When a rule from the loaded system materially affects your decision, mention the source briefly.",
+                "- If the user's request depends on assumptions, paths, conventions, or rules not covered by the loaded content, say so before acting.",
+                "- Do not invent paths, conventions, or rules that are not in the loaded content.",
                 "",
                 "# Updating the system",
-                "- Only on user request.",
-                "- For substantial additions, re-run the bootstrap (with grill-me) instead of patching ad hoc.",
-                "- Show diffs (or proposed pasteable text for online projects) before writing or replacing.",
-                "- Keep the always-loaded surface lean. If a new addition doesn't need every turn, put it in a referenced file or skill, not in the main context file."
+                "- Only update the system on user request.",
+                "- For substantial additions, prefer re-running the bootstrap interview instead of patching ad hoc.",
+                "- Show diffs (or pasteable replacement text for online projects) before writing or replacing.",
+                "- Keep the always-loaded surface lean. If a new addition does not need to load every turn, place it in a referenced file or skill, not in the main context file."
             ].join("\n");
         }
 
