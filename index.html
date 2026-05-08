@@ -48,11 +48,13 @@
         <p class="bulletin-meta">2026-05-08 &nbsp;&middot;&nbsp; Bob Scott &nbsp;&middot;&nbsp; charliemikebi.com</p>
         <p class="bulletin-lede">RebootPilot is the public-facing arm of CharlieMikeBi &mdash; the work I do, packaged so you can actually use it. Lessons, tools, and the occasional rant.</p>
         <p class="bulletin-tease">Coming soon: a Project Manager App, a Power App IDE, vibe-code family apps, analytics, and the security stuff nobody wants to do.</p>
-        <a class="bulletin-link" href="launch-flyer.html">Read the full bulletin &rarr;</a>
+        <a class="bulletin-link" href="launch-flyer.html" data-bulletin-toggle>Read the full bulletin &rarr;</a>
       </section>
     </aside>
   </section>
 </main>
+
+<div class="drawer-scrim" id="drawerScrim" hidden></div>
 
 <div class="notebook" id="toolNotebook">
   <div class="notebook-sheet">
@@ -60,12 +62,26 @@
       <strong>Prompt Generator</strong>
       <div>
         <a href="items/note-intake.html">Open full page</a>
-        <button type="button" data-close-stage="toolNotebook">Close</button>
+        <button type="button" data-close-drawer>Close</button>
       </div>
     </div>
     <iframe title="Note Intake" data-src="items/note-intake.html"></iframe>
   </div>
 </div>
+
+<div class="notebook" id="bulletinDrawer">
+  <div class="notebook-sheet">
+    <div class="notebook-tabs">
+      <strong>Day One &middot; Launch Bulletin</strong>
+      <div>
+        <a href="launch-flyer.html">Open full page</a>
+        <button type="button" data-close-drawer>Close</button>
+      </div>
+    </div>
+    <iframe title="Day One Launch Bulletin" data-src="launch-flyer.html"></iframe>
+  </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
