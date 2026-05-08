@@ -3,60 +3,34 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Note Intake | RebootPilot</title>
+    <title>The Markdown Files | RebootPilot</title>
     <meta
         name="description"
-        content="Generate note-intake prompts for Gmail or Outlook workflows that file safely into a vault or project."
+        content="Generate the bootstrap + operational prompts for a markdown-based Claude system. Built around grill-me-driven setup so the LLM locks the spec before writing any files."
     />
     <link rel="stylesheet" href="../assets/site.css" />
     <style>
-        .tool-layout {
-            display: grid;
-            gap: 18px;
-        }
-
-        .tool-hero,
-        .tool-panel,
-        .output-modal-panel {
+        .tool-layout { display: grid; gap: 18px; }
+        .tool-hero, .tool-panel, .output-modal-panel {
             background: rgba(255, 252, 245, 0.94);
             border: 1px solid var(--line);
             border-radius: 22px;
             box-shadow: var(--shadow);
         }
-
-        .tool-hero {
-            padding: 24px;
-        }
-
-        .tool-hero h1 {
-            margin: 0;
-            font-size: clamp(1.9rem, 4vw, 3rem);
-            color: #0f172a;
-        }
-
-        .tool-hero p {
-            margin: 10px 0 0;
-            max-width: 760px;
-            color: var(--muted);
-        }
-
+        .tool-hero { padding: 24px; }
+        .tool-hero h1 { margin: 0; font-size: clamp(1.9rem, 4vw, 3rem); color: #0f172a; }
+        .tool-hero p { margin: 10px 0 0; max-width: 760px; color: var(--muted); }
         .utility-bar {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 14px;
         }
-
-        .utility-card,
-        .tool-panel {
+        .utility-card, .tool-panel {
             background: #fffdf8;
             border: 1px solid var(--line);
             border-radius: 18px;
         }
-
-        .utility-card {
-            padding: 14px 16px;
-        }
-
+        .utility-card { padding: 14px 16px; }
         .utility-card strong {
             display: block;
             margin-bottom: 8px;
@@ -65,41 +39,22 @@
             text-transform: uppercase;
             color: var(--accent-deep);
         }
-
-        .utility-card p,
-        .utility-card ul {
+        .utility-card p, .utility-card ul {
             margin: 0;
             color: #4b5563;
             font-size: 0.92rem;
             line-height: 1.5;
         }
-
-        .utility-card ul {
-            padding-left: 18px;
-        }
-
+        .utility-card ul { padding-left: 18px; }
         .rating-line {
             margin-bottom: 6px;
             font-size: 1rem;
             font-weight: 700;
             color: #0f172a;
         }
-
-        .tool-panel {
-            padding: 20px;
-        }
-
-        .tool-panel h2 {
-            margin: 0 0 8px;
-            font-size: 1.16rem;
-        }
-
-        .panel-intro {
-            margin: 0 0 16px;
-            color: var(--muted);
-            font-size: 0.94rem;
-        }
-
+        .tool-panel { padding: 20px; }
+        .tool-panel h2 { margin: 0 0 8px; font-size: 1.16rem; }
+        .panel-intro { margin: 0 0 16px; color: var(--muted); font-size: 0.94rem; }
         .pickers fieldset {
             margin: 0 0 14px;
             padding: 14px 14px 12px;
@@ -107,14 +62,12 @@
             border-radius: 14px;
             background: linear-gradient(180deg, #fffdf9 0%, #fff8ea 100%);
         }
-
         .pickers legend {
             padding: 0 6px;
             font-size: 0.95rem;
             font-weight: 700;
             color: #0f172a;
         }
-
         .pickers label {
             display: flex;
             gap: 10px;
@@ -123,27 +76,22 @@
             line-height: 1.42;
             cursor: pointer;
         }
-
-        .pickers input[type="radio"],
-        .pickers input[type="checkbox"] {
+        .pickers input[type="radio"], .pickers input[type="checkbox"] {
             margin-top: 4px;
             flex-shrink: 0;
         }
-
         .hint {
             display: block;
             margin-top: 2px;
             font-size: 0.82rem;
             color: var(--muted);
         }
-
         .field-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-bottom: 14px;
         }
-
         .field-block label {
             display: block;
             margin-bottom: 6px;
@@ -151,9 +99,7 @@
             font-weight: 600;
             color: var(--muted);
         }
-
-        .text-input,
-        .select-input {
+        .text-input, .select-input {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #dbc9a3;
@@ -162,39 +108,22 @@
             background: #fffefb;
             color: var(--ink);
         }
-
-        .folder-builder {
-            margin-top: 10px;
-            padding: 12px;
-            border: 1px solid #dbc9a3;
+        .tool-note {
+            padding: 12px 14px;
+            margin-top: 4px;
             border-radius: 14px;
-            background: #fff9ef;
+            font-size: 0.88rem;
+            background: linear-gradient(180deg, #fff7e7 0%, #fff3dc 100%);
+            border: 1px dashed #c8b78f;
+            color: #374151;
         }
-
-        .folder-builder[hidden] {
-            display: none;
-        }
-
-        .builder-head {
+        .action-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
         }
-
-        .builder-head p {
-            margin: 0;
-            font-size: 0.84rem;
-            color: var(--muted);
-        }
-
-        .builder-add,
-        .tree-node-row button,
-        .generate-btn,
-        .output-close,
-        .copy-output {
+        .generate-btn, .output-close, .copy-output {
             padding: 9px 12px;
             border-radius: 12px;
             border: 1px solid #dbc9a3;
@@ -202,77 +131,12 @@
             font: inherit;
             cursor: pointer;
         }
-
-        .builder-add,
         .copy-output {
             background: var(--accent-soft);
             border-color: #b7cef6;
             color: var(--accent-deep);
             font-weight: 700;
         }
-
-        .builder-tree {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .tree-node {
-            border-left: 2px solid #e3d2ae;
-            padding-left: 12px;
-            margin-left: 4px;
-        }
-
-        .tree-node-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto auto;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .tree-node-children {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .tree-node-meta {
-            margin-top: 4px;
-            font-size: 0.76rem;
-            color: var(--muted);
-        }
-
-        .builder-preview,
-        .tool-note {
-            border-radius: 14px;
-            font-size: 0.88rem;
-        }
-
-        .builder-preview {
-            margin-top: 12px;
-            padding: 12px;
-            background: #fffefb;
-            border: 1px dashed #c8b78f;
-            color: #374151;
-            white-space: pre-wrap;
-        }
-
-        .tool-note {
-            padding: 12px 14px;
-            margin-top: 4px;
-            background: linear-gradient(180deg, #fff7e7 0%, #fff3dc 100%);
-            border: 1px dashed #c8b78f;
-            color: #374151;
-        }
-
-        .action-row {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
         .generate-btn {
             padding: 12px 18px;
             background: var(--accent);
@@ -280,15 +144,9 @@
             color: #fff;
             font-weight: 700;
         }
-
-        .generate-btn:hover,
-        .copy-output:hover,
-        .builder-add:hover,
-        .tree-node-row button:hover,
-        .output-close:hover {
+        .generate-btn:hover, .copy-output:hover, .output-close:hover {
             transform: translateY(-1px);
         }
-
         .output-modal {
             position: fixed;
             inset: 0;
@@ -299,17 +157,12 @@
             padding: 24px;
             background: rgba(15, 23, 42, 0.62);
         }
-
-        .output-modal.active {
-            display: flex;
-        }
-
+        .output-modal.active { display: flex; }
         .output-modal-panel {
             width: min(980px, 100%);
             max-height: 88vh;
             overflow: auto;
         }
-
         .output-dialog-head {
             position: sticky;
             top: 0;
@@ -322,27 +175,13 @@
             border-bottom: 1px solid var(--line);
             background: #fffdf8;
         }
-
-        .output-dialog-head h2 {
-            margin: 0;
-            font-size: 1.15rem;
-        }
-
-        .output-dialog-head p {
-            margin: 2px 0 0;
-            color: var(--muted);
-            font-size: 0.88rem;
-        }
-
+        .output-dialog-head h2 { margin: 0; font-size: 1.15rem; }
+        .output-dialog-head p { margin: 2px 0 0; color: var(--muted); font-size: 0.88rem; }
         .output-block {
             padding: 18px 20px;
             border-bottom: 1px solid var(--line);
         }
-
-        .output-block:last-child {
-            border-bottom: 0;
-        }
-
+        .output-block:last-child { border-bottom: 0; }
         .output-block-head {
             display: flex;
             justify-content: space-between;
@@ -350,18 +189,12 @@
             gap: 12px;
             margin-bottom: 10px;
         }
-
-        .output-block h3 {
-            margin: 0;
-            font-size: 1rem;
-        }
-
+        .output-block h3 { margin: 0; font-size: 1rem; }
         .copy-output.copied {
             background: #166534;
             border-color: #166534;
             color: #fff;
         }
-
         .output-pre {
             margin: 0;
             padding: 16px;
@@ -374,16 +207,8 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
-
         @media (max-width: 980px) {
-            .utility-bar,
-            .field-row {
-                grid-template-columns: 1fr;
-            }
-
-            .tree-node-row {
-                grid-template-columns: 1fr;
-            }
+            .utility-bar, .field-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -396,105 +221,108 @@
             </div>
 
             <section class="tool-hero">
-                <h1>Note Intake</h1>
-                <p>Build an email-based note intake setup that lands in a vault or project without turning setup into a second job. This version is the live launch piece inside RebootPilot.</p>
+                <h1>The Markdown Files</h1>
+                <p>Generate the two prompts you need to bootstrap a markdown-based Claude system &mdash; CLAUDE.md vault, a Claude Skill, or both. The bootstrap prompt opens with a grill-me interview so the model locks your spec (especially trigger conditions and hot vs cold corpus) before it writes a single file.</p>
             </section>
 
             <section class="utility-bar" aria-label="Tool overview">
                 <article class="utility-card">
                     <strong>Difficulty</strong>
-                    <div class="rating-line">Medium</div>
-                    <p>Install an app, connect an account, and tune the workflow once reality starts poking holes in it.</p>
+                    <div class="rating-line">2 / 5</div>
+                    <p>Easy if you let grill-me run. Hard if you skip it and try to back-fit the spec later.</p>
                 </article>
                 <article class="utility-card">
-                    <strong>Core Tools</strong>
+                    <strong>Core tools</strong>
                     <ul>
-                        <li>Claude Desktop, Antigravity, or Codex</li>
-                        <li>Gmail or Outlook</li>
-                        <li>Google Drive or OneDrive</li>
+                        <li>Claude Code or Claude Desktop</li>
+                        <li>grill-me skill (github.com/mattpocock/skills)</li>
+                        <li>A markdown editor</li>
                     </ul>
                 </article>
                 <article class="utility-card">
                     <strong>Optional</strong>
                     <ul>
-                        <li>Power Automate for Outlook intake</li>
-                        <li>Obsidian or another markdown viewer</li>
-                        <li>Trigger-based upstream automations</li>
+                        <li>Existing CLAUDE.md to extend</li>
+                        <li>Existing .claude/skills/ folder</li>
+                        <li>A repo to commit the system into</li>
                     </ul>
                 </article>
                 <article class="utility-card">
                     <strong>What it does</strong>
-                    <p>Email-driven intake into a vault or AI project. The folder builder is just a starting shape, not the final law of the land.</p>
+                    <p>Two copy-ready prompts: a bootstrap prompt that grills you and writes the markdown system, plus an operational prompt for sessions after setup.</p>
                 </article>
             </section>
 
             <section class="tool-panel pickers">
-                <h2>Build your setup</h2>
-                <p class="panel-intro">Choose the email path, routing behavior, structure approach, and note logic. The tool will generate copy-ready prompts for your selected runtime.</p>
+                <h2>Build your markdown system</h2>
+                <p class="panel-intro">Pick what kind of system you're setting up, how it should enter context, and what it's for. Generate gives you the bootstrap prompt and the operational follow-up.</p>
 
                 <fieldset>
-                    <legend>1. Email path</legend>
-                    <label><input type="radio" name="email" value="gmail" checked> <span>Gmail<span class="hint">Assistant reads the inbox directly.</span></span></label>
-                    <label><input type="radio" name="email" value="outlook"> <span>Outlook<span class="hint">Uses a small Power Automate intake step.</span></span></label>
+                    <legend>1. System target</legend>
+                    <label><input type="radio" name="system" value="claudemd" checked> <span>CLAUDE.md vault &mdash; persistent always-loaded context<span class="hint">For things Claude needs every turn: who you are, how you work, what's in scope.</span></span></label>
+                    <label><input type="radio" name="system" value="skill"> <span>Claude Skill &mdash; triggered, loaded on demand<span class="hint">A markdown folder that loads when its trigger fires. Better for niche or heavy content.</span></span></label>
+                    <label><input type="radio" name="system" value="both"> <span>Both &mdash; CLAUDE.md hot index + cold-loaded skills<span class="hint">Recommended once a system gets non-trivial. Hot index points at cold skill files.</span></span></label>
                 </fieldset>
 
                 <fieldset>
-                    <legend>2. Routing mode</legend>
-                    <label><input type="radio" name="routing" value="assist" checked> <span>Inbox + AI assist<span class="hint">Recommended. Everything lands in Inbox and the AI suggests destination, tags, and summary.</span></span></label>
-                    <label><input type="radio" name="routing" value="trigger"> <span>Trigger<span class="hint">Use a token like <code>note:[home]</code> to hint the destination up front.</span></span></label>
-                    <label><input type="radio" name="routing" value="agent"> <span>Agent handling<span class="hint">Advanced. Better after you learn your note patterns.</span></span></label>
-                    <label><input type="radio" name="routing" value="user"> <span>User handling<span class="hint">Manual review and filing. Available, but not recommended.</span></span></label>
-                </fieldset>
-
-                <fieldset>
-                    <legend>3. Filing logic</legend>
-                    <label><input type="checkbox" id="confidenceGate" checked> <span>Confidence gate<span class="hint">Only suggest a destination when confidence is high. Otherwise leave it open for the user.</span></span></label>
-                    <label><input type="checkbox" id="includeTags" checked> <span>Tags<span class="hint">Recommend tags. Refine them over time as the vault matures.</span></span></label>
-                    <label><input type="checkbox" id="includeBlurb" checked> <span>One-line summary<span class="hint">Give each note a quick pickup summary that the user can override later.</span></span></label>
-                    <label><input type="checkbox" id="includeUnsure" checked> <span>Unsure handling<span class="hint">Keep ambiguous items in Inbox instead of forcing a guess.</span></span></label>
-                </fieldset>
-
-                <fieldset>
-                    <legend>4. Runtime</legend>
+                    <legend>2. Runtime &amp; name</legend>
                     <div class="field-row">
                         <div class="field-block">
-                            <label for="workspaceName">Workspace name</label>
-                            <input class="text-input" type="text" id="workspaceName" value="CommandersVault">
-                        </div>
-                        <div class="field-block">
-                            <label for="assistantChoice">Assistant</label>
-                            <select class="select-input" id="assistantChoice">
-                                <option value="claude">Claude Desktop</option>
-                                <option value="antigravity">Antigravity</option>
-                                <option value="codex">Codex</option>
+                            <label for="runtime">Where this runs</label>
+                            <select class="select-input" id="runtime">
+                                <option value="code">Claude Code (CLI)</option>
+                                <option value="desktop">Claude Desktop</option>
+                                <option value="multi">Multi-runtime portable</option>
                             </select>
                         </div>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>5. Destination</legend>
-                    <label><input type="radio" name="storage" value="vault-have"> <span>Existing markdown vault<span class="hint">Use a folder tree you already have.</span></span></label>
-                    <label><input type="radio" name="storage" value="vault-new" checked> <span>New vault<span class="hint">Setup will need extra instruction later.</span></span></label>
-                    <label><input type="radio" name="storage" value="project"> <span>AI project only<span class="hint">No files. We will need project-style instructions later.</span></span></label>
-                </fieldset>
-
-                <fieldset>
-                    <legend>6. File setup</legend>
-                    <label><input type="radio" name="flow" value="flat" checked> <span>Flat structure<span class="hint">Start simple with a few top-level destinations like Work, Home, Ideas, or Reference.</span></span></label>
-                    <label><input type="radio" name="flow" value="assistant"> <span>Build in the assistant<span class="hint">Let the prompt help propose and refine the tree inside Claude, Antigravity, or Codex.</span></span></label>
-                    <label><input type="radio" name="flow" value="builder"> <span>Folder maker<span class="hint">Build a starter tree here. Add up to 2 child folders per branch, up to 8 levels deep. The AI can continue refining later.</span></span></label>
-                    <div class="folder-builder" id="folderBuilder" hidden>
-                        <div class="builder-head">
-                            <p>Start with top-level folders, then nest deeper only where needed. Each branch can have up to 2 children and go up to 8 levels deep.</p>
-                            <button class="builder-add" id="addRootFolder" type="button">Add root folder</button>
+                        <div class="field-block">
+                            <label for="workspaceName">Workspace / system name</label>
+                            <input class="text-input" type="text" id="workspaceName" value="MyVault">
                         </div>
-                        <div class="builder-tree" id="builderTree"></div>
-                        <div class="builder-preview" id="builderPreview"></div>
                     </div>
                 </fieldset>
 
-                <div class="tool-note">Recommended path: start with Inbox + AI assist and a flatter structure. If the vault starts drifting, use the assistant to refine naming, branching, and tag rules instead of trying to over-design everything up front.</div>
+                <fieldset>
+                    <legend>3. Context strategy &mdash; hot vs cold</legend>
+                    <p class="panel-intro" style="margin:0 0 8px">How content enters the model's context. Single biggest decision in the design.</p>
+                    <label><input type="radio" name="hotcold" value="all-hot"> <span>All hot &mdash; everything always loaded<span class="hint">Simple. Bloats context. OK for tiny systems (under ~10KB).</span></span></label>
+                    <label><input type="radio" name="hotcold" value="all-cold"> <span>All cold &mdash; nothing loads until triggered<span class="hint">Lean. Requires a strong trigger and a clear "where to look" entry point.</span></span></label>
+                    <label><input type="radio" name="hotcold" value="mixed" checked> <span>Mixed &mdash; hot index + cold body files<span class="hint">Recommended. A tiny CLAUDE.md acts as table of contents; bodies load on demand.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>4. Trigger surface &mdash; when does this enter context</legend>
+                    <label><input type="radio" name="trigger" value="always" checked> <span>Always-on (CLAUDE.md only)<span class="hint">Loads every turn. Reserve for foundational rules.</span></span></label>
+                    <label><input type="radio" name="trigger" value="keyword"> <span>Keyword match<span class="hint">Loads when the user mentions specific terms or topics.</span></span></label>
+                    <label><input type="radio" name="trigger" value="task-shape"> <span>Task shape<span class="hint">Loads when the user's request matches a task pattern (e.g., "write a PR description").</span></span></label>
+                    <label><input type="radio" name="trigger" value="manual"> <span>Manual (slash-command)<span class="hint">Only loads when the user explicitly invokes a /command.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>5. Purpose &amp; out-of-scope</legend>
+                    <div class="field-block">
+                        <label for="purpose">What's this system for? (one or two sentences)</label>
+                        <input class="text-input" type="text" id="purpose" placeholder="e.g., Help Claude know my project's conventions and stop guessing">
+                    </div>
+                    <div class="field-block" style="margin-top:10px">
+                        <label for="scopeOut">Explicitly NOT for: (optional)</label>
+                        <input class="text-input" type="text" id="scopeOut" placeholder="e.g., Code generation, secrets handling, anything client-facing">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>6. Grill-me source</legend>
+                    <label><input type="radio" name="grill" value="external" checked> <span>Install grill-me from github.com/mattpocock/skills<span class="hint">Recommended. Drops a polished interview skill into .claude/skills/ and uses it to lock the spec.</span></span></label>
+                    <label><input type="radio" name="grill" value="inline"> <span>Inline mini-grill (no install)<span class="hint">Bootstrap prompt embeds an 8-question grill. No external dependency.</span></span></label>
+                    <label><input type="radio" name="grill" value="skip"> <span>Skip grill &mdash; just spec and write<span class="hint">Faster but riskier. Claude will assume answers from your purpose/scope.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>7. Extra rounds</legend>
+                    <label><input type="checkbox" id="securityGrill" checked> <span>Security &amp; data-interaction round<span class="hint">Adds a focused round on how the system's data and setup interact with the user's goal: what it reads/writes, blast radius of mistakes, sensitive scope, credentials, files Claude must never touch, rollback path. Runs regardless of grill source.</span></span></label>
+                </fieldset>
+
+                <div class="tool-note"><strong>Recommended path:</strong> Mixed hot/cold + Always-on for the index + Install grill-me + Security round on. Grill-me forces a real spec; mixed strategy keeps context lean; security round stops surprises.</div>
                 <div class="action-row">
                     <button class="generate-btn" id="generateOutput" type="button">Generate output</button>
                 </div>
@@ -507,7 +335,7 @@
             <div class="output-dialog-head">
                 <div>
                     <h2 id="outputTitle">Generated prompts</h2>
-                    <p id="outputSubtitle">Copy each block into your selected AI runtime.</p>
+                    <p id="outputSubtitle">Bootstrap prompt grills you and writes the system. Operational prompt is for every session after.</p>
                 </div>
                 <button class="output-close" id="closeOutput" type="button">Close</button>
             </div>
@@ -516,461 +344,247 @@
     </div>
 
     <script>
-        const FLOWS = {
-            flat: ["Work", "Home", "Ideas", "Reference"],
-            assistant: ["Work", "Home", "Ideas", "Reference"]
-        };
-
-        let nextNodeId = 7;
-
         const state = {
-            email: "gmail",
-            routing: "assist",
-            storage: "vault-new",
-            flow: "flat",
-            builderTree: [
-                { id: 1, name: "Work", children: [
-                    { id: 2, name: "Clients", children: [] },
-                    { id: 3, name: "Internal", children: [] }
-                ] },
-                { id: 4, name: "Home", children: [
-                    { id: 5, name: "Personal", children: [] },
-                    { id: 6, name: "Admin", children: [] }
-                ] }
-            ],
-            workspaceName: "CommandersVault",
-            assistant: "claude",
-            confidenceGate: true,
-            includeTags: true,
-            includeBlurb: true,
-            includeUnsure: true
+            system: "claudemd",
+            runtime: "code",
+            workspaceName: "MyVault",
+            hotcold: "mixed",
+            trigger: "always",
+            purpose: "",
+            scopeOut: "",
+            grill: "external",
+            securityGrill: true
         };
 
-        const folderBuilder = document.getElementById("folderBuilder");
-        const builderTree = document.getElementById("builderTree");
-        const builderPreview = document.getElementById("builderPreview");
-        const addRootFolderBtn = document.getElementById("addRootFolder");
-        const workspaceNameInput = document.getElementById("workspaceName");
-        const assistantChoice = document.getElementById("assistantChoice");
-        const confidenceGateInput = document.getElementById("confidenceGate");
-        const includeTagsInput = document.getElementById("includeTags");
-        const includeBlurbInput = document.getElementById("includeBlurb");
-        const includeUnsureInput = document.getElementById("includeUnsure");
-        const generateOutputBtn = document.getElementById("generateOutput");
-        const outputModal = document.getElementById("outputModal");
-        const closeOutputBtn = document.getElementById("closeOutput");
-        const outputBlocks = document.getElementById("outputBlocks");
-        const outputSubtitle = document.getElementById("outputSubtitle");
-
-        function createNode(name) {
-            return { id: nextNodeId++, name: (name || "").trim(), children: [] };
-        }
-
-        function flattenTreePaths(nodes, prefix) {
-            const base = prefix || [];
-            return nodes.flatMap(function(node) {
-                const cleanName = (node.name || "").trim();
-                if (!cleanName) return [];
-                const next = base.concat(cleanName);
-                return [next.join("/")].concat(flattenTreePaths(node.children || [], next));
-            });
-        }
-
-        function renderTreeLines(paths, indent) {
-            const root = {};
-            paths.forEach(function(path) {
-                const parts = path.split("/").filter(Boolean);
-                let node = root;
-                parts.forEach(function(part) {
-                    if (!node[part]) node[part] = {};
-                    node = node[part];
-                });
-            });
-
-            function walk(node, depthIndent) {
-                return Object.keys(node).sort().flatMap(function(key) {
-                    return [depthIndent + "- " + key + "/"].concat(walk(node[key], depthIndent + "  "));
-                });
-            }
-
-            return walk(root, indent);
-        }
-
-        function getCategories() {
-            if (state.flow === "builder") return flattenTreePaths(state.builderTree);
-            return FLOWS[state.flow] || [];
-        }
+        const els = {
+            runtime: document.getElementById("runtime"),
+            workspaceName: document.getElementById("workspaceName"),
+            purpose: document.getElementById("purpose"),
+            scopeOut: document.getElementById("scopeOut"),
+            securityGrill: document.getElementById("securityGrill"),
+            generate: document.getElementById("generateOutput"),
+            modal: document.getElementById("outputModal"),
+            closeBtn: document.getElementById("closeOutput"),
+            blocks: document.getElementById("outputBlocks"),
+            subtitle: document.getElementById("outputSubtitle")
+        };
 
         function runtimeLabel() {
-            if (state.assistant === "antigravity") return "Antigravity";
-            if (state.assistant === "codex") return "Codex";
-            return "Claude Desktop";
+            return ({ code: "Claude Code", desktop: "Claude Desktop", multi: "any Claude runtime" })[state.runtime];
         }
 
-        function modeLabel() {
-            if (state.storage === "project") return "project/online";
-            if (state.storage === "vault-have") return "existing vault";
-            return "new vault";
+        function systemLabel() {
+            return ({
+                claudemd: "CLAUDE.md vault (persistent context)",
+                skill: "Claude Skill (triggered)",
+                both: "CLAUDE.md hot index + Claude Skills (cold-loaded)"
+            })[state.system];
         }
 
-        function emailLabel() {
-            return state.email === "outlook" ? "Outlook" : "Gmail";
+        function hotColdLabel() {
+            return ({
+                "all-hot": "all-hot — everything loads every turn",
+                "all-cold": "all-cold — nothing loads until trigger fires",
+                mixed: "mixed — hot index + cold body files"
+            })[state.hotcold];
         }
 
-        function routingLabel() {
-            if (state.routing === "trigger") return "trigger routing";
-            if (state.routing === "agent") return "agent handling";
-            if (state.routing === "user") return "user handling";
-            return "Inbox + AI assist";
+        function triggerLabel() {
+            return ({
+                always: "always-on (every turn)",
+                keyword: "keyword match",
+                "task-shape": "task-shape match",
+                manual: "manual /command invoke"
+            })[state.trigger];
         }
 
-        function structureLabel() {
-            if (state.flow === "builder") return "folder-maker starter tree";
-            if (state.flow === "assistant") return "assistant-built structure";
-            return "flat starter structure";
-        }
-
-        function removeNodeById(nodes, id) {
-            for (let i = nodes.length - 1; i >= 0; i -= 1) {
-                if (nodes[i].id === id) {
-                    nodes.splice(i, 1);
-                    return true;
-                }
-                if (removeNodeById(nodes[i].children || [], id)) return true;
-            }
-            return false;
-        }
-
-        function renderTreeNode(node, depth) {
-            const wrapper = document.createElement("div");
-            wrapper.className = "tree-node";
-
-            const row = document.createElement("div");
-            row.className = "tree-node-row";
-
-            const input = document.createElement("input");
-            input.className = "text-input";
-            input.placeholder = "Folder name";
-            input.value = node.name || "";
-            input.addEventListener("input", function(event) {
-                node.name = event.target.value;
-                renderBuilder();
-            });
-
-            const addChild = document.createElement("button");
-            addChild.type = "button";
-            addChild.textContent = "Add child";
-            addChild.disabled = depth >= 8 || (node.children || []).length >= 2;
-            addChild.addEventListener("click", function() {
-                if (depth < 8 && (node.children || []).length < 2) {
-                    node.children.push(createNode(""));
-                    renderUi();
-                }
-            });
-
-            const remove = document.createElement("button");
-            remove.type = "button";
-            remove.textContent = "Remove";
-            remove.addEventListener("click", function() {
-                removeNodeById(state.builderTree, node.id);
-                if (!state.builderTree.length) state.builderTree.push(createNode("Work"));
-                renderUi();
-            });
-
-            row.appendChild(input);
-            row.appendChild(addChild);
-            row.appendChild(remove);
-            wrapper.appendChild(row);
-
-            const meta = document.createElement("div");
-            meta.className = "tree-node-meta";
-            meta.textContent = "Depth " + depth + " of 8" + ((node.children || []).length >= 2 ? " / max 2 children reached" : "");
-            wrapper.appendChild(meta);
-
-            if (node.children && node.children.length) {
-                const children = document.createElement("div");
-                children.className = "tree-node-children";
-                node.children.forEach(function(child) {
-                    children.appendChild(renderTreeNode(child, depth + 1));
-                });
-                wrapper.appendChild(children);
-            }
-
-            return wrapper;
-        }
-
-        function renderBuilder() {
-            if (!builderTree || !builderPreview) return;
-            builderTree.innerHTML = "";
-            state.builderTree.forEach(function(node) {
-                builderTree.appendChild(renderTreeNode(node, 1));
-            });
-
-            const preview = getCategories();
-            builderPreview.textContent = preview.length
-                ? "Current tree:\n" + [workspaceNameInput.value.trim() || "CommandersVault", "- Inbox/"]
-                    .join("/\n")
-                    .replace("/\n- Inbox/", "/\n- Inbox/")
-                    + "\n" + renderTreeLines(preview, "  ").join("\n")
-                : "Current tree:\n" + (workspaceNameInput.value.trim() || "CommandersVault") + "/\n- Inbox/\n  - Add at least one folder";
-        }
-
-        function renderUi() {
-            folderBuilder.hidden = state.flow !== "builder";
-            renderBuilder();
-        }
-
-        function selectedStructureText() {
-            const categories = getCategories();
-            if (state.flow === "builder" && categories.length) {
-                return [workspaceNameInput.value.trim() || "CommandersVault", "- Inbox/"]
-                    .join("/\n")
-                    .replace("/\n- Inbox/", "/\n- Inbox/")
-                    + "\n" + renderTreeLines(categories, "  ").join("\n");
-            }
-            return (categories.length ? categories : FLOWS.flat).map(function(item) {
-                return "- " + item + "/";
-            }).join("\n");
-        }
-
-        function sharedConfigLines() {
+        function configBlock() {
+            const ws = state.workspaceName.trim() || "MyVault";
+            const purpose = state.purpose.trim() || "(not yet specified — grill the user before writing)";
+            const scopeOut = state.scopeOut.trim() || "(not specified)";
             return [
-                "Selected runtime: " + runtimeLabel(),
-                "Selected mode: " + modeLabel(),
-                "Email path: " + emailLabel(),
-                "Routing mode: " + routingLabel(),
-                "Structure approach: " + structureLabel(),
-                "Confidence gate: " + (state.confidenceGate ? "on" : "off"),
-                "Tags: " + (state.includeTags ? "recommended" : "off"),
-                "One-line summary: " + (state.includeBlurb ? "on" : "off"),
-                "Unsure handling: " + (state.includeUnsure ? "on" : "off")
+                "- System type: " + systemLabel(),
+                "- Runtime: " + runtimeLabel(),
+                "- Workspace name: " + ws,
+                "- Context strategy: " + hotColdLabel(),
+                "- Trigger surface: " + triggerLabel(),
+                "- Purpose: " + purpose,
+                "- Explicitly out of scope: " + scopeOut
             ].join("\n");
         }
 
-        function runtimeSetupGuidance() {
-            if (state.assistant === "claude") {
+        function grillSection() {
+            const focusBlock = [
+                "Trigger conditions — When should this system enter context? Walk through always-on vs keyword vs task-shape vs manual. Lock one, with concrete examples (which exact phrases, which task shapes).",
+                "Hot vs cold corpus — What loads every turn vs on demand? Identify the always-loaded INDEX and the cold-loaded BODY files. Estimate sizes (KB, file count). If everything is hot, justify why."
+            ].join("\n- ");
+
+            if (state.grill === "external") {
                 return [
-                    "Use scoped connectors only.",
-                    "- Filesystem connector should point only at the vault or sandbox folder.",
-                    "- Gmail connector, if used, should be narrowed to the intake label/search/folder.",
-                    "- If connector scope is missing or too broad, pause and ask the user to fix it.",
-                    "- Create or update CLAUDE.md or equivalent instructions without overwriting existing guidance."
+                    "## Step 1 — Make sure grill-me is installed",
+                    "Check whether the grill-me skill exists in the active runtime's .claude/skills/ directory. If not, install it from github.com/mattpocock/skills (clone the repo, copy the grill-me skill into .claude/skills/grill-me/, restart the session if required).",
+                    "",
+                    "## Step 2 — Use grill-me to interview the user",
+                    "Run the grill-me skill on this system spec. Keep the full interview under 10 questions, grouped by topic. Do not skip topics; do compress related ones.",
+                    "",
+                    "Push hard on these two topics — they're the load-bearing decisions:",
+                    "- " + focusBlock,
+                    "",
+                    "Cover briefly:",
+                    "- Purpose: What problem does this system solve? Name the failure mode it prevents.",
+                    "- Audience: Who operates this — the user, an agent, both?",
+                    "- Boundaries: What looks in-scope but isn't?",
+                    "- Pruning: How does this stay lean as it grows? What's the signal to split, retire, or compress a file?",
+                    "",
+                    "Don't accept hand-waving. If an answer is vague, push back with a concrete example. If the user contradicts an earlier answer, flag it and ask which one to keep.",
+                    "",
+                    "After the interview, summarize what was said in your own words and wait for the user to confirm before writing any files."
                 ].join("\n");
             }
-            if (state.assistant === "antigravity") {
+            if (state.grill === "inline") {
                 return [
-                    "Operate as a cautious local workspace agent.",
-                    "- Inspect the current vault tree before proposing changes.",
-                    "- Prefer reversible, small edits.",
-                    "- Leave durable workspace instructions for Prompt 2.",
-                    "- Do not mass-move, rename, delete, or rewrite notes without explicit approval."
+                    "## Inline grill — interview before writing",
+                    "Ask these 8 questions, grouped, one round at a time. Don't write any files until the user confirms the summary at the end.",
+                    "",
+                    "Round 1 — Purpose (2 questions)",
+                    "1. What problem does this system solve? (Specific failure mode it prevents.)",
+                    "2. Who operates this — you, an agent, both?",
+                    "",
+                    "Round 2 — Trigger (2 questions, push hard)",
+                    "3. When should this system enter context? Always-on, keyword, task-shape, or manual?",
+                    "4. If keyword/task-shape: which exact phrases or task patterns?",
+                    "",
+                    "Round 3 — Hot vs cold corpus (3 questions, push hard)",
+                    "5. What's the always-loaded core? (CLAUDE.md material — under ~5KB ideal.)",
+                    "6. What's the cold-loaded body? (Skill files loaded only when triggered.)",
+                    "7. Rough total size — KB, file count, growth expectation?",
+                    "",
+                    "Round 4 — Boundaries (1 question)",
+                    "8. What is this system NOT for? Anything that looks in-scope but isn't?",
+                    "",
+                    "After all 4 rounds, summarize and wait for the user to confirm before writing files."
                 ].join("\n");
             }
             return [
-                "Operate like a careful coding/workspace agent.",
-                "- Treat the vault as user-owned source material.",
-                "- Keep system rules explicit in markdown files.",
-                "- Record setup changes in a changelog.",
-                "- Do not delete, bulk rename, or reorganize existing notes during setup."
+                "## Skip grill — assume the stated purpose and scope are sufficient",
+                "Don't run a long interview. If a key decision (especially trigger condition or hot/cold split) is not derivable from the stated purpose, ask exactly one focused question to fill the gap. Otherwise proceed straight to the writing step."
             ].join("\n");
         }
 
-        function buildVaultSetupPrompt() {
-            const sandboxOrExisting = state.storage === "vault-new"
-                ? "Assume this may start as a sandbox or fresh vault unless the user says otherwise."
-                : "Assume this is a real existing vault. Audit first, modify second.";
-            return [
-                "You are " + runtimeLabel() + " helping set up a two-prompt note intake system inside a markdown note vault.",
-                "",
-                "Your job in Prompt 1 is setup only. Do not process live notes yet. Prepare the vault, rules, templates, and operating instructions that Prompt 2 will use later.",
-                "",
-                "# Current configuration",
-                sharedConfigLines(),
-                "",
-                "# Vault setup mode",
-                sandboxOrExisting,
-                "",
-                "# Starter structure",
-                selectedStructureText(),
-                "",
-                "# Runtime-specific setup guidance",
-                runtimeSetupGuidance(),
-                "",
-                "# Ask these setup questions before editing",
-                "1. Is this a sandbox vault or a real existing vault?",
-                "2. What is the exact vault root path?",
-                "3. Which folders are allowed for read/write?",
-                "4. Should new folders be created automatically, proposed first, or avoided?",
-                "5. What existing folders, tags, templates, or conventions must be preserved?",
-                "6. What should happen when a note does not clearly belong anywhere?",
-                "",
-                "# Create or propose",
-                "- Inbox/ for unprocessed notes.",
-                "- Review/ or Inbox/Needs Review/ for ambiguous notes.",
-                "- A system/instructions area such as System/ or _system/note-intake/.",
-                "- Routing rules for Prompt 2.",
-                "- Filing schema and tag guidance.",
-                "- A note template that preserves source, date, subject, tags, summary, category, and confidence.",
-                "- A changelog or filing log if this is a real vault.",
-                "",
-                "# Safety boundaries",
-                "- Do not delete files.",
-                "- Do not bulk rename or move existing notes.",
-                "- Do not overwrite existing instructions or templates without showing the proposed change.",
-                "- Preserve existing vault conventions where possible.",
-                "- Keep setup reversible.",
-                "- Document assumptions separately from confirmed rules.",
-                "",
-                "# Completion criteria",
-                "Finish Prompt 1 by summarizing what was created or proposed, what was intentionally left untouched, and what Prompt 2 should do next."
-            ].join("\n");
-        }
-
-        function buildVaultRuntimePrompt() {
-            return [
-                "You are " + runtimeLabel() + " operating an already-configured note intake vault.",
-                "",
-                "Your job in Prompt 2 is to review incoming notes, suggest destinations, suggest tags, write a one-line summary, and file safely according to the vault rules created in Prompt 1.",
-                "",
-                "# Current configuration",
-                sharedConfigLines(),
-                "",
-                "# Intake assumptions",
-                state.email === "gmail"
-                    ? "- Intake is email-originated through Gmail. Use only the approved Gmail scope/label/search."
-                    : "- Intake is email-originated through Outlook. Assume Power Automate or a similar step writes notes into Inbox/ as markdown.",
-                "- Treat email content as source material. Do not delete, archive, label, or modify source email unless explicitly approved.",
-                "",
-                "# Workflow",
-                "1. Review each new item in Inbox/ or the provided intake batch.",
-                "2. Preserve source context: sender, date, subject, links, deadlines, decisions, and action items when present.",
-                "3. Suggest destination path, filename/title, tags, one-line summary, related notes/projects, and confidence.",
-                state.routing === "assist" ? "4. Wait for the user to confirm or edit the destination before moving anything." : "4. Apply the selected routing mode below.",
-                "",
-                "# Routing mode",
-                routingBehaviorText(),
-                "",
-                "# Confidence gate",
-                state.confidenceGate
-                    ? "High confidence may be filed. Medium or low confidence should be staged in Inbox/Review or presented for confirmation."
-                    : "Offer the best routing suggestion, but still avoid destructive changes.",
-                "",
-                "# Safety rules",
-                "- Never delete source files, source emails, or existing notes.",
-                "- Never overwrite an existing note without explicit approval.",
-                "- Check for likely duplicates before creating a new note.",
-                "- Prefer copying or staging over destructive moves.",
-                "- If unsure, ask or leave the item in Inbox/Review.",
-                "- Use existing vault conventions before inventing new folders or tags.",
-                "",
-                "# Output before filing",
-                "Source:",
-                "Suggested destination:",
-                "Suggested filename:",
-                "Suggested tags:",
-                "One-line summary:",
-                "Related notes/projects:",
-                "Confidence:",
-                "Recommended action:",
-                "Needs user review:"
-            ].join("\n");
-        }
-
-        function routingBehaviorText() {
-            if (state.routing === "trigger") {
+        function writeStep() {
+            if (state.system === "claudemd") {
                 return [
-                    "Respect trigger hints such as note:[home], note:[work], note:[project-name], or similar patterns.",
-                    "Treat the trigger as a strong routing hint, but validate it against the vault structure before moving.",
-                    "If the target is missing or ambiguous, ask before creating or moving."
+                    "Write or update CLAUDE.md at the active project root.",
+                    "- Lead with WHO the user is, HOW they work, and THEIR existing setup (read from grill answers).",
+                    "- Then explicit rules and out-of-scope.",
+                    "- Keep it under 200 lines if possible. If longer, split into cold skill files and link from CLAUDE.md.",
+                    "- If CLAUDE.md already exists, propose a diff (don't overwrite silently)."
                 ].join("\n");
             }
-            if (state.routing === "agent") {
+            if (state.system === "skill") {
                 return [
-                    "Act as a cautious maintenance agent.",
-                    "Propose structure, tag, and naming refinements over time.",
-                    "Do not auto-restructure the vault without approval."
-                ].join("\n");
-            }
-            if (state.routing === "user") {
-                return [
-                    "Treat filing as manual.",
-                    "Show options and let the user choose the destination before anything moves."
+                    "Create a Claude Skill at .claude/skills/<skill-name>/ with:",
+                    "- index.md (entry point with frontmatter: name, description/trigger, summary)",
+                    "- One or more body files for the actual rules and content",
+                    "- A README.md if there are setup steps the human runs",
+                    "Frontmatter must declare the trigger condition (" + triggerLabel() + ") explicitly so the loader can pattern-match it."
                 ].join("\n");
             }
             return [
-                "Use Inbox + AI assist.",
-                "Everything starts in Inbox/.",
-                "Suggest destination, tags, and summary.",
-                "User confirms or edits before filing."
+                "Write both layers:",
+                "1. CLAUDE.md (hot index) — lists what skills exist, each with a one-line description and the exact trigger that loads it. Keep this file tight; it's the table of contents, not the content.",
+                "2. .claude/skills/<skill-name>/ — cold-loaded skill folders. Each has an index.md (frontmatter + summary) plus body files holding the real rules.",
+                "",
+                "Don't duplicate content between layers. If something appears in CLAUDE.md, it loads every turn; if it's a niche reference, push it into a skill body."
             ].join("\n");
         }
 
-        function buildProjectInstructions() {
+        function securitySection() {
+            if (!state.securityGrill) return "";
             return [
-                "Create a new project/chat workspace in " + runtimeLabel() + ".",
                 "",
-                "# Human setup steps",
-                "1. Create a project named " + (workspaceNameInput.value.trim() || "CommandersVault") + ".",
-                "2. Paste the project prompt into the project instructions or first message.",
-                "3. Use the project as the review and organization layer for email-originated notes.",
-                "4. Start with one short sample note before using it heavily.",
-                "5. Come back and refine tags, categories, and structure if the system starts drifting.",
+                "## Security & data-interaction round (always run, regardless of grill source above)",
+                "Run a focused round on how this system's data and setup interact with the user's goal. Don't accept \"it's fine\" — push for specifics:",
+                "- What data does this system read or write? Be exact about paths, services, accounts.",
+                "- Is any of it sensitive — credentials, PII, client material, anything covered by an NDA or compliance rule?",
+                "- Where do credentials live (env vars, .env, secrets manager, keychain)? What is the system actually allowed to read?",
+                "- Blast radius: if you (the assistant) get this wrong, what gets damaged, leaked, or hard to roll back?",
+                "- Forbidden surfaces: which files, paths, services, or accounts must NEVER be touched by this system, even on user request inside its loaded scope?",
+                "- Integrations: how does this system interact with other tools, agents, MCP servers, or automations the user already has running?",
+                "- Rollback: what's the path back if a markdown change breaks something? Is the system in version control?",
                 "",
-                "# Suggested starter structure",
-                selectedStructureText()
+                "Surface contradictions explicitly. If the user says \"no sensitive data\" but the system needs to read .env or call an authenticated API, push back and reconcile before writing."
             ].join("\n");
         }
 
-        function buildProjectPrompt() {
+        function buildBootstrapPrompt() {
             return [
-                "You are my note intake and organization assistant inside this project.",
+                "You are " + runtimeLabel() + " bootstrapping a markdown system: " + systemLabel() + ".",
                 "",
-                "# Current configuration",
-                sharedConfigLines(),
+                "# Stated configuration",
+                configBlock(),
                 "",
-                "# Your job",
-                "Help me process email-originated notes. A note may have started somewhere else upstream, but in this demo it arrives through Gmail or Outlook.",
+                grillSection(),
+                securitySection(),
                 "",
-                "# Workflow",
-                "1. Read each note I paste or provide.",
-                "2. Suggest a destination/category from the current structure.",
-                state.includeTags ? "3. Suggest 1-3 tags that fit the existing pattern." : "3. Do not add tags unless I ask.",
-                state.includeBlurb ? "4. Write a one-line summary for quick pickup later." : "4. Keep the note concise without adding a summary field.",
-                "5. Ask me to confirm or edit before finalizing the filing decision.",
-                "",
-                "# Routing behavior",
-                routingBehaviorText(),
-                "",
-                "# Confidence behavior",
-                state.confidenceGate
-                    ? "If confidence is medium or low, say so and give me 1-3 options instead of pretending you know."
-                    : "If confidence is low, still explain your uncertainty.",
+                "# After the interview — write the system",
+                writeStep(),
                 "",
                 "# Safety",
-                "Never delete notes unless I explicitly tell you to. Do not invent a complex taxonomy too early. Help me refine structure and tags over time."
+                "- Never overwrite an existing CLAUDE.md or skill file without showing a diff and getting approval.",
+                "- Never delete files.",
+                "- Add new content as clearly delimited sections; don't blend it into prior content silently.",
+                "- Document the trigger condition explicitly (in frontmatter or the CLAUDE.md index entry).",
+                "- Keep the always-loaded surface minimal. If something doesn't need to load every turn, move it to a cold skill.",
+                "",
+                "# Done when",
+                "Done when the user confirms (a) the spec summary, (b) the file diffs, and (c) the trigger condition. Output a one-paragraph handoff describing what was created and how to use it in subsequent sessions."
             ].join("\n");
+        }
+
+        function buildOperationalPrompt() {
+            const loadedLine = state.system === "claudemd"
+                ? "- CLAUDE.md (always-loaded persistent context)"
+                : state.system === "skill"
+                    ? "- The triggered skill body files for this turn"
+                    : "- CLAUDE.md (hot index, every turn)\n- Whichever skill files matched this turn's trigger";
+            const triggerSanityLine = state.trigger === "keyword" || state.trigger === "task-shape"
+                ? "If the user's message doesn't actually match the trigger, you should not be loaded. Confirm the trigger fired correctly before acting."
+                : "";
+            return [
+                "You are " + runtimeLabel() + " operating with the " + (state.workspaceName.trim() || "MyVault") + " markdown system loaded.",
+                "",
+                "# Trigger that brought this in",
+                "Configured to load on: " + triggerLabel() + ".",
+                triggerSanityLine,
+                "",
+                "# What's loaded right now",
+                loadedLine,
+                "",
+                "# Behavior",
+                "- Cite the markdown source when applying any rule from the system.",
+                "- If the user's request is outside the loaded scope, say so before acting.",
+                "- If the relevant content lives in a cold skill that wasn't triggered, name the skill the user should load — don't fabricate the rule from memory.",
+                "- Don't invent paths, conventions, or rules that aren't in the loaded files.",
+                "",
+                "# Updating the system",
+                "- Only on user request.",
+                "- For substantial additions, re-run the bootstrap (with grill-me) instead of patching ad hoc.",
+                "- Show diffs before writing.",
+                "- Keep the always-loaded surface lean. If a new addition doesn't need every turn, put it in a cold skill, not in CLAUDE.md."
+            ].filter(Boolean).join("\n");
         }
 
         function generateBlocks() {
-            if (state.storage === "project") {
-                return [
-                    { title: "Project instructions", body: buildProjectInstructions() },
-                    { title: "Project prompt", body: buildProjectPrompt() }
-                ];
-            }
             return [
-                { title: "Prompt 1: Build/setup the vault", body: buildVaultSetupPrompt() },
-                { title: "Prompt 2: Run note intake", body: buildVaultRuntimePrompt() }
+                { title: "Bootstrap prompt — paste at start of a fresh session", body: buildBootstrapPrompt() },
+                { title: "Operational prompt — for sessions after the system is set up", body: buildOperationalPrompt() }
             ];
         }
 
         function openOutput() {
             const blocks = generateBlocks();
-            outputBlocks.innerHTML = "";
-            outputSubtitle.textContent = state.storage === "project"
-                ? "Project mode gives you setup instructions plus one project prompt."
-                : "Vault mode gives you two prompts: setup first, intake second.";
-
+            els.blocks.innerHTML = "";
             blocks.forEach(function(block) {
                 const blockEl = document.createElement("section");
                 blockEl.className = "output-block";
@@ -1007,70 +621,41 @@
                 head.appendChild(copy);
                 blockEl.appendChild(head);
                 blockEl.appendChild(pre);
-                outputBlocks.appendChild(blockEl);
+                els.blocks.appendChild(blockEl);
             });
 
-            outputModal.classList.add("active");
-            outputModal.setAttribute("aria-hidden", "false");
+            els.modal.classList.add("active");
+            els.modal.setAttribute("aria-hidden", "false");
         }
 
-        document.querySelectorAll('input[name="email"]').forEach(function(el) {
-            el.addEventListener("change", function(event) {
-                state.email = event.target.value;
-            });
+        document.querySelectorAll('input[name="system"]').forEach(function(el) {
+            el.addEventListener("change", function(event) { state.system = event.target.value; });
         });
-        document.querySelectorAll('input[name="routing"]').forEach(function(el) {
-            el.addEventListener("change", function(event) {
-                state.routing = event.target.value;
-            });
+        document.querySelectorAll('input[name="hotcold"]').forEach(function(el) {
+            el.addEventListener("change", function(event) { state.hotcold = event.target.value; });
         });
-        document.querySelectorAll('input[name="storage"]').forEach(function(el) {
-            el.addEventListener("change", function(event) {
-                state.storage = event.target.value;
-            });
+        document.querySelectorAll('input[name="trigger"]').forEach(function(el) {
+            el.addEventListener("change", function(event) { state.trigger = event.target.value; });
         });
-        document.querySelectorAll('input[name="flow"]').forEach(function(el) {
-            el.addEventListener("change", function(event) {
-                state.flow = event.target.value;
-                renderUi();
-            });
+        document.querySelectorAll('input[name="grill"]').forEach(function(el) {
+            el.addEventListener("change", function(event) { state.grill = event.target.value; });
         });
-        addRootFolderBtn.addEventListener("click", function() {
-            state.builderTree.push(createNode(""));
-            renderUi();
+        els.runtime.addEventListener("change", function(event) { state.runtime = event.target.value; });
+        els.workspaceName.addEventListener("input", function(event) { state.workspaceName = event.target.value; });
+        els.purpose.addEventListener("input", function(event) { state.purpose = event.target.value; });
+        els.scopeOut.addEventListener("input", function(event) { state.scopeOut = event.target.value; });
+        els.securityGrill.addEventListener("change", function(event) { state.securityGrill = event.target.checked; });
+        els.generate.addEventListener("click", openOutput);
+        els.closeBtn.addEventListener("click", function() {
+            els.modal.classList.remove("active");
+            els.modal.setAttribute("aria-hidden", "true");
         });
-        workspaceNameInput.addEventListener("input", function(event) {
-            state.workspaceName = event.target.value;
-            renderBuilder();
-        });
-        assistantChoice.addEventListener("change", function(event) {
-            state.assistant = event.target.value;
-        });
-        confidenceGateInput.addEventListener("change", function(event) {
-            state.confidenceGate = event.target.checked;
-        });
-        includeTagsInput.addEventListener("change", function(event) {
-            state.includeTags = event.target.checked;
-        });
-        includeBlurbInput.addEventListener("change", function(event) {
-            state.includeBlurb = event.target.checked;
-        });
-        includeUnsureInput.addEventListener("change", function(event) {
-            state.includeUnsure = event.target.checked;
-        });
-        generateOutputBtn.addEventListener("click", openOutput);
-        closeOutputBtn.addEventListener("click", function() {
-            outputModal.classList.remove("active");
-            outputModal.setAttribute("aria-hidden", "true");
-        });
-        outputModal.addEventListener("click", function(event) {
-            if (event.target === outputModal) {
-                outputModal.classList.remove("active");
-                outputModal.setAttribute("aria-hidden", "true");
+        els.modal.addEventListener("click", function(event) {
+            if (event.target === els.modal) {
+                els.modal.classList.remove("active");
+                els.modal.setAttribute("aria-hidden", "true");
             }
         });
-
-        renderUi();
     </script>
 </body>
 </html>
