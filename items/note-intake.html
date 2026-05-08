@@ -294,7 +294,9 @@
                     "- Boundaries: What looks in-scope but isn't?",
                     "- Conventions: How do they want the agent to behave (formatting, voice, level of detail, when to ask vs decide)?",
                     "",
-                    "Don't accept hand-waving. If an answer is vague, push back with a concrete example. If the user contradicts an earlier answer, flag it and ask which to keep.",
+                    "Don't accept hand-waving. If an answer is vague, push back with a concrete example.",
+                    "Example: user says \"I want it organized.\" Push back with: \"Organized how — by project, by date, by client? Give me a sample folder you'd consider well-organized.\"",
+                    "If the user contradicts an earlier answer, flag it and ask which to keep.",
                     "",
                     "After the interview, summarize what was said in your own words and wait for the user to confirm before writing any files."
                 ].join("\n");
@@ -365,6 +367,7 @@
             }
             return [
                 "Write or update " + contextFileName() + " at the active project root.",
+                "(\"Active project root\" = current working directory in Claude Code or Codex Desktop CLI; the folder your filesystem connector is scoped to in Claude Desktop; the repo root if the agent is operating in one.)",
                 "- Lead with WHO the user is, HOW they work, and THEIR existing setup (read from grill answers).",
                 "- Then explicit rules and out-of-scope.",
                 "- Keep it under 200 lines if possible. If longer, split related material into linked files and reference them from " + contextFileName() + ".",
@@ -406,14 +409,17 @@
                 "# What's loaded right now",
                 loadedLine,
                 "",
+                "# Continuity from setup",
+                "If the user pastes a handoff paragraph from the bootstrap (or references prior session changes), use it to confirm what's loaded and what's changed since the last session before acting.",
+                "",
                 "# Behavior",
-                "- When a rule from the loaded system materially affects your decision, mention the source briefly.",
+                "- When a rule from the loaded system materially affects your decision, mention the source briefly (the section heading is enough — don't quote the full passage every time).",
                 "- If the user's request depends on assumptions, paths, conventions, or rules not covered by the loaded content, say so before acting.",
                 "- Do not invent paths, conventions, or rules that are not in the loaded content.",
                 "",
                 "# Updating the system",
                 "- Only update the system on user request.",
-                "- For substantial additions, prefer re-running the bootstrap interview instead of patching ad hoc.",
+                "- For substantial additions (anything adding a new always-loaded rule, or more than ~20 lines), prefer re-running the bootstrap interview instead of patching ad hoc.",
                 "- Show diffs (or pasteable replacement text for online projects) before writing or replacing.",
                 "- Keep the always-loaded surface lean. If a new addition does not need to load every turn, place it in a referenced file or skill, not in the main context file."
             ].join("\n");
