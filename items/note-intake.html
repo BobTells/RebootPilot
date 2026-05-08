@@ -6,7 +6,7 @@
     <title>The Markdown Files | RebootPilot</title>
     <meta
         name="description"
-        content="Generate the bootstrap + operational prompts for a markdown-based Claude system. Built around grill-me-driven setup so the LLM locks the spec before writing any files."
+        content="Generate the bootstrap + operational prompts for a CLAUDE.md / AGENTS.md persistent-context system. Built around grill-me-driven setup so the LLM locks the spec before writing any files."
     />
     <link rel="stylesheet" href="../assets/site.css" />
     <style>
@@ -108,6 +108,8 @@
             background: #fffefb;
             color: var(--ink);
         }
+        .other-input { margin-top: 6px; max-width: 360px; }
+        .other-input[hidden] { display: none; }
         .tool-note {
             padding: 12px 14px;
             margin-top: 4px;
@@ -117,6 +119,12 @@
             border: 1px dashed #c8b78f;
             color: #374151;
         }
+        .feedback-note {
+            background: linear-gradient(180deg, #eef5ff 0%, #e0eaff 100%);
+            border: 1px dashed #8aaadf;
+            color: #1e3a8a;
+        }
+        .feedback-note a { color: #1e3a8a; font-weight: 700; }
         .action-row {
             display: flex;
             justify-content: flex-end;
@@ -222,7 +230,7 @@
 
             <section class="tool-hero">
                 <h1>The Markdown Files</h1>
-                <p>Generate the two prompts you need to bootstrap a markdown-based Claude system &mdash; CLAUDE.md vault, a Claude Skill, or both. The bootstrap prompt opens with a grill-me interview so the model locks your spec (especially trigger conditions and hot vs cold corpus) before it writes a single file.</p>
+                <p>Generate the two prompts you need to bootstrap a persistent-context markdown system &mdash; CLAUDE.md, AGENTS.md, or the equivalent for your runtime. The bootstrap prompt opens with a grill-me interview so the model locks your spec before it writes a single file.</p>
             </section>
 
             <section class="utility-bar" aria-label="Tool overview">
@@ -234,7 +242,7 @@
                 <article class="utility-card">
                     <strong>Core tools</strong>
                     <ul>
-                        <li>Claude Code or Claude Desktop</li>
+                        <li>Claude / Codex / Antigravity / your pick</li>
                         <li>grill-me skill (github.com/mattpocock/skills)</li>
                         <li>A markdown editor</li>
                     </ul>
@@ -242,64 +250,52 @@
                 <article class="utility-card">
                     <strong>Optional</strong>
                     <ul>
-                        <li>Existing CLAUDE.md to extend</li>
-                        <li>Existing .claude/skills/ folder</li>
+                        <li>Existing CLAUDE.md / AGENTS.md to extend</li>
                         <li>A repo to commit the system into</li>
                     </ul>
                 </article>
                 <article class="utility-card">
                     <strong>What it does</strong>
-                    <p>Two copy-ready prompts: a bootstrap prompt that grills you and writes the markdown system, plus an operational prompt for sessions after setup.</p>
+                    <p>Two copy-ready prompts: a bootstrap that grills you and writes the file, plus an operational prompt for sessions after setup.</p>
                 </article>
+            </section>
+
+            <section class="tool-note feedback-note">
+                <strong>Feedback wanted &mdash; this is v1.</strong> Run the prompt, see what your agent does, send back what worked, what was weird, what tip would have made it better. Reach me at <a href="mailto:droppingsbrain6@gmail.com">droppingsbrain6@gmail.com</a> or on LinkedIn. Every reply makes the next version smarter.
             </section>
 
             <section class="tool-panel pickers">
                 <h2>Build your markdown system</h2>
-                <p class="panel-intro">Pick what kind of system you're setting up, how it should enter context, and what it's for. Generate gives you the bootstrap prompt and the operational follow-up.</p>
+                <p class="panel-intro">CLAUDE.md (or AGENTS.md, or the equivalent for your runtime) is always the starting artifact. Pick the agent and where it runs, tell us the purpose, and Generate gives you the bootstrap + operational prompts.</p>
 
                 <fieldset>
-                    <legend>1. System target</legend>
-                    <label><input type="radio" name="system" value="claudemd" checked> <span>CLAUDE.md vault &mdash; persistent always-loaded context<span class="hint">For things Claude needs every turn: who you are, how you work, what's in scope.</span></span></label>
-                    <label><input type="radio" name="system" value="skill"> <span>Claude Skill &mdash; triggered, loaded on demand<span class="hint">A markdown folder that loads when its trigger fires. Better for niche or heavy content.</span></span></label>
-                    <label><input type="radio" name="system" value="both"> <span>Both &mdash; CLAUDE.md hot index + cold-loaded skills<span class="hint">Recommended once a system gets non-trivial. Hot index points at cold skill files.</span></span></label>
+                    <legend>1. Agent / LLM product</legend>
+                    <label><input type="radio" name="agent" value="claude" checked> <span>Claude<span class="hint">Anthropic's Claude. Output file is CLAUDE.md.</span></span></label>
+                    <label><input type="radio" name="agent" value="codex"> <span>Codex<span class="hint">OpenAI Codex. Output file is AGENTS.md.</span></span></label>
+                    <label><input type="radio" name="agent" value="antigravity"> <span>Antigravity<span class="hint">Google's Antigravity. Output file is AGENTS.md.</span></span></label>
+                    <label><input type="radio" name="agent" value="other"> <span>Other &mdash; type below<span class="hint">Any agent we haven't listed. The prompt asks the agent to figure out the right convention itself.</span></span></label>
+                    <input class="text-input other-input" id="agentOther" type="text" placeholder="e.g., Cursor, Aider, Roo Code" hidden>
                 </fieldset>
 
                 <fieldset>
-                    <legend>2. Runtime &amp; name</legend>
-                    <div class="field-row">
-                        <div class="field-block">
-                            <label for="runtime">Where this runs</label>
-                            <select class="select-input" id="runtime">
-                                <option value="code">Claude Code (CLI)</option>
-                                <option value="desktop">Claude Desktop</option>
-                                <option value="multi">Multi-runtime portable</option>
-                            </select>
-                        </div>
-                        <div class="field-block">
-                            <label for="workspaceName">Workspace / system name</label>
-                            <input class="text-input" type="text" id="workspaceName" value="MyVault">
-                        </div>
+                    <legend>2. Where it runs</legend>
+                    <label><input type="radio" name="runtime" value="code" checked> <span>Claude Code (CLI)<span class="hint">Terminal-based agent in a repo. Reads CLAUDE.md / AGENTS.md from disk.</span></span></label>
+                    <label><input type="radio" name="runtime" value="desktop"> <span>Claude Desktop<span class="hint">Desktop app. Reads filesystem via connector.</span></span></label>
+                    <label><input type="radio" name="runtime" value="online"> <span>Online project<span class="hint">Browser project (claude.ai project, ChatGPT project, etc.). No filesystem &mdash; the file content goes into project instructions instead.</span></span></label>
+                    <label><input type="radio" name="runtime" value="other"> <span>Other &mdash; type below<span class="hint">Anything not on the list. The prompt asks the agent to figure out where the persistent-context file lives.</span></span></label>
+                    <input class="text-input other-input" id="runtimeOther" type="text" placeholder="e.g., VS Code Copilot CLI, Aider in tmux" hidden>
+                </fieldset>
+
+                <fieldset>
+                    <legend>3. Workspace / system name</legend>
+                    <div class="field-block">
+                        <label for="workspaceName">What do you want to call this system? (used in the prompt for clarity)</label>
+                        <input class="text-input" type="text" id="workspaceName" value="MyVault">
                     </div>
                 </fieldset>
 
                 <fieldset>
-                    <legend>3. Context strategy &mdash; hot vs cold</legend>
-                    <p class="panel-intro" style="margin:0 0 8px">How content enters the model's context. Single biggest decision in the design.</p>
-                    <label><input type="radio" name="hotcold" value="all-hot"> <span>All hot &mdash; everything always loaded<span class="hint">Simple. Bloats context. OK for tiny systems (under ~10KB).</span></span></label>
-                    <label><input type="radio" name="hotcold" value="all-cold"> <span>All cold &mdash; nothing loads until triggered<span class="hint">Lean. Requires a strong trigger and a clear "where to look" entry point.</span></span></label>
-                    <label><input type="radio" name="hotcold" value="mixed" checked> <span>Mixed &mdash; hot index + cold body files<span class="hint">Recommended. A tiny CLAUDE.md acts as table of contents; bodies load on demand.</span></span></label>
-                </fieldset>
-
-                <fieldset>
-                    <legend>4. Trigger surface &mdash; when does this enter context</legend>
-                    <label><input type="radio" name="trigger" value="always" checked> <span>Always-on (CLAUDE.md only)<span class="hint">Loads every turn. Reserve for foundational rules.</span></span></label>
-                    <label><input type="radio" name="trigger" value="keyword"> <span>Keyword match<span class="hint">Loads when the user mentions specific terms or topics.</span></span></label>
-                    <label><input type="radio" name="trigger" value="task-shape"> <span>Task shape<span class="hint">Loads when the user's request matches a task pattern (e.g., "write a PR description").</span></span></label>
-                    <label><input type="radio" name="trigger" value="manual"> <span>Manual (slash-command)<span class="hint">Only loads when the user explicitly invokes a /command.</span></span></label>
-                </fieldset>
-
-                <fieldset>
-                    <legend>5. Purpose &amp; out-of-scope</legend>
+                    <legend>4. Purpose &amp; out-of-scope</legend>
                     <div class="field-block">
                         <label for="purpose">What's this system for? (one or two sentences)</label>
                         <input class="text-input" type="text" id="purpose" placeholder="e.g., Help Claude know my project's conventions and stop guessing">
@@ -311,18 +307,18 @@
                 </fieldset>
 
                 <fieldset>
-                    <legend>6. Grill-me source</legend>
+                    <legend>5. Grill-me source</legend>
                     <label><input type="radio" name="grill" value="external" checked> <span>Install grill-me from github.com/mattpocock/skills<span class="hint">Recommended. Drops a polished interview skill into .claude/skills/ and uses it to lock the spec.</span></span></label>
                     <label><input type="radio" name="grill" value="inline"> <span>Inline mini-grill (no install)<span class="hint">Bootstrap prompt embeds an 8-question grill. No external dependency.</span></span></label>
-                    <label><input type="radio" name="grill" value="skip"> <span>Skip grill &mdash; just spec and write<span class="hint">Faster but riskier. Claude will assume answers from your purpose/scope.</span></span></label>
+                    <label><input type="radio" name="grill" value="skip"> <span>Skip grill &mdash; just spec and write<span class="hint">Faster but riskier. Agent will assume answers from your purpose/scope.</span></span></label>
                 </fieldset>
 
                 <fieldset>
-                    <legend>7. Extra rounds</legend>
-                    <label><input type="checkbox" id="securityGrill" checked> <span>Security &amp; data-interaction round<span class="hint">Adds a focused round on how the system's data and setup interact with the user's goal: what it reads/writes, blast radius of mistakes, sensitive scope, credentials, files Claude must never touch, rollback path. Runs regardless of grill source.</span></span></label>
+                    <legend>6. Extra rounds</legend>
+                    <label><input type="checkbox" id="securityGrill" checked> <span>Security &amp; data-interaction round<span class="hint">Adds a focused round on how the system's data and setup interact with the user's goal: what it reads/writes, blast radius of mistakes, sensitive scope, credentials, files the agent must never touch, rollback path. Runs regardless of grill source.</span></span></label>
                 </fieldset>
 
-                <div class="tool-note"><strong>Recommended path:</strong> Mixed hot/cold + Always-on for the index + Install grill-me + Security round on. Grill-me forces a real spec; mixed strategy keeps context lean; security round stops surprises.</div>
+                <div class="tool-note"><strong>Recommended:</strong> Install grill-me + Security round on. Grill-me forces a real spec; the security round stops surprises.</div>
                 <div class="action-row">
                     <button class="generate-btn" id="generateOutput" type="button">Generate output</button>
                 </div>
@@ -335,7 +331,7 @@
             <div class="output-dialog-head">
                 <div>
                     <h2 id="outputTitle">Generated prompts</h2>
-                    <p id="outputSubtitle">Bootstrap prompt grills you and writes the system. Operational prompt is for every session after.</p>
+                    <p id="outputSubtitle">Bootstrap prompt grills you and writes the file. Operational prompt is for every session after.</p>
                 </div>
                 <button class="output-close" id="closeOutput" type="button">Close</button>
             </div>
@@ -345,11 +341,11 @@
 
     <script>
         const state = {
-            system: "claudemd",
+            agent: "claude",
+            agentOther: "",
             runtime: "code",
+            runtimeOther: "",
             workspaceName: "MyVault",
-            hotcold: "mixed",
-            trigger: "always",
             purpose: "",
             scopeOut: "",
             grill: "external",
@@ -357,7 +353,8 @@
         };
 
         const els = {
-            runtime: document.getElementById("runtime"),
+            agentOther: document.getElementById("agentOther"),
+            runtimeOther: document.getElementById("runtimeOther"),
             workspaceName: document.getElementById("workspaceName"),
             purpose: document.getElementById("purpose"),
             scopeOut: document.getElementById("scopeOut"),
@@ -369,33 +366,24 @@
             subtitle: document.getElementById("outputSubtitle")
         };
 
+        function agentLabel() {
+            if (state.agent === "claude") return "Claude";
+            if (state.agent === "codex") return "Codex";
+            if (state.agent === "antigravity") return "Antigravity";
+            return state.agentOther.trim() || "your chosen agent";
+        }
+
+        function contextFileName() {
+            if (state.agent === "claude") return "CLAUDE.md";
+            if (state.agent === "codex" || state.agent === "antigravity") return "AGENTS.md";
+            return "the agent-specific persistent-context file (CLAUDE.md / AGENTS.md / equivalent — the agent should know which)";
+        }
+
         function runtimeLabel() {
-            return ({ code: "Claude Code", desktop: "Claude Desktop", multi: "any Claude runtime" })[state.runtime];
-        }
-
-        function systemLabel() {
-            return ({
-                claudemd: "CLAUDE.md vault (persistent context)",
-                skill: "Claude Skill (triggered)",
-                both: "CLAUDE.md hot index + Claude Skills (cold-loaded)"
-            })[state.system];
-        }
-
-        function hotColdLabel() {
-            return ({
-                "all-hot": "all-hot — everything loads every turn",
-                "all-cold": "all-cold — nothing loads until trigger fires",
-                mixed: "mixed — hot index + cold body files"
-            })[state.hotcold];
-        }
-
-        function triggerLabel() {
-            return ({
-                always: "always-on (every turn)",
-                keyword: "keyword match",
-                "task-shape": "task-shape match",
-                manual: "manual /command invoke"
-            })[state.trigger];
+            if (state.runtime === "code") return "Claude Code (CLI)";
+            if (state.runtime === "desktop") return "Claude Desktop";
+            if (state.runtime === "online") return "an online project (browser-based, no filesystem)";
+            return state.runtimeOther.trim() || "a runtime not on the standard list";
         }
 
         function configBlock() {
@@ -403,40 +391,32 @@
             const purpose = state.purpose.trim() || "(not yet specified — grill the user before writing)";
             const scopeOut = state.scopeOut.trim() || "(not specified)";
             return [
-                "- System type: " + systemLabel(),
+                "- Agent / LLM: " + agentLabel(),
                 "- Runtime: " + runtimeLabel(),
-                "- Workspace name: " + ws,
-                "- Context strategy: " + hotColdLabel(),
-                "- Trigger surface: " + triggerLabel(),
+                "- Persistent-context file: " + contextFileName(),
+                "- System name: " + ws,
                 "- Purpose: " + purpose,
                 "- Explicitly out of scope: " + scopeOut
             ].join("\n");
         }
 
         function grillSection() {
-            const focusBlock = [
-                "Trigger conditions — When should this system enter context? Walk through always-on vs keyword vs task-shape vs manual. Lock one, with concrete examples (which exact phrases, which task shapes).",
-                "Hot vs cold corpus — What loads every turn vs on demand? Identify the always-loaded INDEX and the cold-loaded BODY files. Estimate sizes (KB, file count). If everything is hot, justify why."
-            ].join("\n- ");
-
             if (state.grill === "external") {
                 return [
                     "## Step 1 — Make sure grill-me is installed",
-                    "Check whether the grill-me skill exists in the active runtime's .claude/skills/ directory. If not, install it from github.com/mattpocock/skills (clone the repo, copy the grill-me skill into .claude/skills/grill-me/, restart the session if required).",
+                    "Check whether the grill-me skill exists in the active runtime's skills directory (e.g., .claude/skills/ for Claude, equivalent for others). If not, install it from github.com/mattpocock/skills (clone, copy the grill-me folder into the skills directory, restart the session if required).",
                     "",
                     "## Step 2 — Use grill-me to interview the user",
-                    "Run the grill-me skill on this system spec. Keep the full interview under 10 questions, grouped by topic. Do not skip topics; do compress related ones.",
+                    "Run the grill-me skill on this system spec. Keep the full interview under 10 questions, grouped by topic. Don't skip topics; do compress related ones.",
                     "",
-                    "Push hard on these two topics — they're the load-bearing decisions:",
-                    "- " + focusBlock,
-                    "",
-                    "Cover briefly:",
+                    "Cover:",
                     "- Purpose: What problem does this system solve? Name the failure mode it prevents.",
                     "- Audience: Who operates this — the user, an agent, both?",
+                    "- Existing setup: What runtime, repo, vault, or prior context files already exist that this should respect?",
                     "- Boundaries: What looks in-scope but isn't?",
-                    "- Pruning: How does this stay lean as it grows? What's the signal to split, retire, or compress a file?",
+                    "- Conventions: How do they want the agent to behave (formatting, voice, level of detail, when to ask vs decide)?",
                     "",
-                    "Don't accept hand-waving. If an answer is vague, push back with a concrete example. If the user contradicts an earlier answer, flag it and ask which one to keep.",
+                    "Don't accept hand-waving. If an answer is vague, push back with a concrete example. If the user contradicts an earlier answer, flag it and ask which to keep.",
                     "",
                     "After the interview, summarize what was said in your own words and wait for the user to confirm before writing any files."
                 ].join("\n");
@@ -444,58 +424,30 @@
             if (state.grill === "inline") {
                 return [
                     "## Inline grill — interview before writing",
-                    "Ask these 8 questions, grouped, one round at a time. Don't write any files until the user confirms the summary at the end.",
+                    "Ask these 8 questions, grouped, one round at a time. Don't write until the user confirms the summary at the end.",
                     "",
-                    "Round 1 — Purpose (2 questions)",
-                    "1. What problem does this system solve? (Specific failure mode it prevents.)",
-                    "2. Who operates this — you, an agent, both?",
+                    "Round 1 — Identity (2 questions)",
+                    "1. Who are you and what do you do? (Used to shape the agent's awareness of context.)",
+                    "2. What problem does this system solve — what failure mode does it prevent?",
                     "",
-                    "Round 2 — Trigger (2 questions, push hard)",
-                    "3. When should this system enter context? Always-on, keyword, task-shape, or manual?",
-                    "4. If keyword/task-shape: which exact phrases or task patterns?",
+                    "Round 2 — Existing setup (2 questions)",
+                    "3. What runtime / repo / vault / prior context files already exist that this should respect?",
+                    "4. Anything the agent should NOT touch or assume?",
                     "",
-                    "Round 3 — Hot vs cold corpus (3 questions, push hard)",
-                    "5. What's the always-loaded core? (CLAUDE.md material — under ~5KB ideal.)",
-                    "6. What's the cold-loaded body? (Skill files loaded only when triggered.)",
-                    "7. Rough total size — KB, file count, growth expectation?",
+                    "Round 3 — Conventions (2 questions)",
+                    "5. How do you want the agent to talk to you (terse vs verbose, ask-vs-decide thresholds)?",
+                    "6. Any formatting or voice rules (no emoji, no apologies, specific tone)?",
                     "",
-                    "Round 4 — Boundaries (1 question)",
-                    "8. What is this system NOT for? Anything that looks in-scope but isn't?",
+                    "Round 4 — Boundaries (2 questions)",
+                    "7. What is this system NOT for?",
+                    "8. What's the smallest first version of the file we can ship today?",
                     "",
-                    "After all 4 rounds, summarize and wait for the user to confirm before writing files."
+                    "After all 4 rounds, summarize and wait for the user to confirm before writing."
                 ].join("\n");
             }
             return [
                 "## Skip grill — assume the stated purpose and scope are sufficient",
-                "Don't run a long interview. If a key decision (especially trigger condition or hot/cold split) is not derivable from the stated purpose, ask exactly one focused question to fill the gap. Otherwise proceed straight to the writing step."
-            ].join("\n");
-        }
-
-        function writeStep() {
-            if (state.system === "claudemd") {
-                return [
-                    "Write or update CLAUDE.md at the active project root.",
-                    "- Lead with WHO the user is, HOW they work, and THEIR existing setup (read from grill answers).",
-                    "- Then explicit rules and out-of-scope.",
-                    "- Keep it under 200 lines if possible. If longer, split into cold skill files and link from CLAUDE.md.",
-                    "- If CLAUDE.md already exists, propose a diff (don't overwrite silently)."
-                ].join("\n");
-            }
-            if (state.system === "skill") {
-                return [
-                    "Create a Claude Skill at .claude/skills/<skill-name>/ with:",
-                    "- index.md (entry point with frontmatter: name, description/trigger, summary)",
-                    "- One or more body files for the actual rules and content",
-                    "- A README.md if there are setup steps the human runs",
-                    "Frontmatter must declare the trigger condition (" + triggerLabel() + ") explicitly so the loader can pattern-match it."
-                ].join("\n");
-            }
-            return [
-                "Write both layers:",
-                "1. CLAUDE.md (hot index) — lists what skills exist, each with a one-line description and the exact trigger that loads it. Keep this file tight; it's the table of contents, not the content.",
-                "2. .claude/skills/<skill-name>/ — cold-loaded skill folders. Each has an index.md (frontmatter + summary) plus body files holding the real rules.",
-                "",
-                "Don't duplicate content between layers. If something appears in CLAUDE.md, it loads every turn; if it's a niche reference, push it into a skill body."
+                "Don't run a long interview. If a key decision is not derivable from the stated purpose, ask exactly one focused question to fill the gap. Otherwise proceed straight to the writing step."
             ].join("\n");
         }
 
@@ -508,18 +460,51 @@
                 "- What data does this system read or write? Be exact about paths, services, accounts.",
                 "- Is any of it sensitive — credentials, PII, client material, anything covered by an NDA or compliance rule?",
                 "- Where do credentials live (env vars, .env, secrets manager, keychain)? What is the system actually allowed to read?",
-                "- Blast radius: if you (the assistant) get this wrong, what gets damaged, leaked, or hard to roll back?",
+                "- Blast radius: if you (the agent) get this wrong, what gets damaged, leaked, or hard to roll back?",
                 "- Forbidden surfaces: which files, paths, services, or accounts must NEVER be touched by this system, even on user request inside its loaded scope?",
-                "- Integrations: how does this system interact with other tools, agents, MCP servers, or automations the user already has running?",
+                "- Integrations: how does this system interact with other tools, agents, MCP servers, or automations the user has running?",
                 "- Rollback: what's the path back if a markdown change breaks something? Is the system in version control?",
                 "",
                 "Surface contradictions explicitly. If the user says \"no sensitive data\" but the system needs to read .env or call an authenticated API, push back and reconcile before writing."
             ].join("\n");
         }
 
+        function writeStep() {
+            if (state.runtime === "online") {
+                return [
+                    "Runtime is an online project (no filesystem). Don't write a file — instead, generate the exact text that should be pasted into the project's system instructions / project knowledge area.",
+                    "Output the content as a single markdown block, clearly labeled, ready to paste.",
+                    "If the user already has system instructions in place, propose a diff showing what to add and where, not a wholesale replacement."
+                ].join("\n");
+            }
+            if (state.agent === "other" || state.runtime === "other") {
+                return [
+                    "Determine the correct persistent-context convention for the chosen agent + runtime before writing.",
+                    "If a known convention exists (CLAUDE.md, AGENTS.md, .cursor/rules, .aider.conf.yml, etc.), use it.",
+                    "If unknown, ask the user once, then proceed.",
+                    "Write or update the file at the project root. If it exists, propose a diff first, don't overwrite silently."
+                ].join("\n");
+            }
+            return [
+                "Write or update " + contextFileName() + " at the active project root.",
+                "- Lead with WHO the user is, HOW they work, and THEIR existing setup (read from grill answers).",
+                "- Then explicit rules and out-of-scope.",
+                "- Keep it under 200 lines if possible. If longer, split related material into linked files and reference them from " + contextFileName() + ".",
+                "- If " + contextFileName() + " already exists, propose a diff (don't overwrite silently)."
+            ].join("\n");
+        }
+
+        function feedbackSection() {
+            return [
+                "",
+                "# Feedback (please)",
+                "This generator is in active refinement. If you spot anything weird about this prompt — bad assumptions, missing rounds, output that surprised you, or a tip that made it run better — send it back to droppingsbrain6@gmail.com. Every reply sharpens the next version."
+            ].join("\n");
+        }
+
         function buildBootstrapPrompt() {
             return [
-                "You are " + runtimeLabel() + " bootstrapping a markdown system: " + systemLabel() + ".",
+                "You are " + agentLabel() + " running in " + runtimeLabel() + ", bootstrapping a persistent-context markdown system.",
                 "",
                 "# Stated configuration",
                 configBlock(),
@@ -531,32 +516,23 @@
                 writeStep(),
                 "",
                 "# Safety",
-                "- Never overwrite an existing CLAUDE.md or skill file without showing a diff and getting approval.",
+                "- Never overwrite an existing context file without showing a diff and getting approval.",
                 "- Never delete files.",
                 "- Add new content as clearly delimited sections; don't blend it into prior content silently.",
-                "- Document the trigger condition explicitly (in frontmatter or the CLAUDE.md index entry).",
-                "- Keep the always-loaded surface minimal. If something doesn't need to load every turn, move it to a cold skill.",
+                "- Keep the persistent-context surface minimal. If something doesn't need to be loaded every turn, document it in a separate file and reference it.",
                 "",
                 "# Done when",
-                "Done when the user confirms (a) the spec summary, (b) the file diffs, and (c) the trigger condition. Output a one-paragraph handoff describing what was created and how to use it in subsequent sessions."
+                "Done when the user confirms (a) the spec summary, (b) the file diffs (or pasteable content for online projects), and (c) any open questions are resolved. Output a one-paragraph handoff describing what was created and how to use it in subsequent sessions.",
+                feedbackSection()
             ].join("\n");
         }
 
         function buildOperationalPrompt() {
-            const loadedLine = state.system === "claudemd"
-                ? "- CLAUDE.md (always-loaded persistent context)"
-                : state.system === "skill"
-                    ? "- The triggered skill body files for this turn"
-                    : "- CLAUDE.md (hot index, every turn)\n- Whichever skill files matched this turn's trigger";
-            const triggerSanityLine = state.trigger === "keyword" || state.trigger === "task-shape"
-                ? "If the user's message doesn't actually match the trigger, you should not be loaded. Confirm the trigger fired correctly before acting."
-                : "";
+            const loadedLine = state.runtime === "online"
+                ? "- Project instructions / project knowledge (always in scope while the project is open)"
+                : "- " + contextFileName() + " (always-loaded persistent context)";
             return [
-                "You are " + runtimeLabel() + " operating with the " + (state.workspaceName.trim() || "MyVault") + " markdown system loaded.",
-                "",
-                "# Trigger that brought this in",
-                "Configured to load on: " + triggerLabel() + ".",
-                triggerSanityLine,
+                "You are " + agentLabel() + " operating with the " + (state.workspaceName.trim() || "MyVault") + " markdown system loaded.",
                 "",
                 "# What's loaded right now",
                 loadedLine,
@@ -564,15 +540,15 @@
                 "# Behavior",
                 "- Cite the markdown source when applying any rule from the system.",
                 "- If the user's request is outside the loaded scope, say so before acting.",
-                "- If the relevant content lives in a cold skill that wasn't triggered, name the skill the user should load — don't fabricate the rule from memory.",
-                "- Don't invent paths, conventions, or rules that aren't in the loaded files.",
+                "- Don't invent paths, conventions, or rules that aren't in the loaded content.",
                 "",
                 "# Updating the system",
                 "- Only on user request.",
                 "- For substantial additions, re-run the bootstrap (with grill-me) instead of patching ad hoc.",
-                "- Show diffs before writing.",
-                "- Keep the always-loaded surface lean. If a new addition doesn't need every turn, put it in a cold skill, not in CLAUDE.md."
-            ].filter(Boolean).join("\n");
+                "- Show diffs (or proposed pasteable text for online projects) before writing or replacing.",
+                "- Keep the always-loaded surface lean. If a new addition doesn't need every turn, put it in a referenced file or skill, not in the main context file.",
+                feedbackSection()
+            ].join("\n");
         }
 
         function generateBlocks() {
@@ -628,19 +604,28 @@
             els.modal.setAttribute("aria-hidden", "false");
         }
 
-        document.querySelectorAll('input[name="system"]').forEach(function(el) {
-            el.addEventListener("change", function(event) { state.system = event.target.value; });
+        function syncOtherInputs() {
+            els.agentOther.hidden = state.agent !== "other";
+            els.runtimeOther.hidden = state.runtime !== "other";
+        }
+
+        document.querySelectorAll('input[name="agent"]').forEach(function(el) {
+            el.addEventListener("change", function(event) {
+                state.agent = event.target.value;
+                syncOtherInputs();
+            });
         });
-        document.querySelectorAll('input[name="hotcold"]').forEach(function(el) {
-            el.addEventListener("change", function(event) { state.hotcold = event.target.value; });
-        });
-        document.querySelectorAll('input[name="trigger"]').forEach(function(el) {
-            el.addEventListener("change", function(event) { state.trigger = event.target.value; });
+        document.querySelectorAll('input[name="runtime"]').forEach(function(el) {
+            el.addEventListener("change", function(event) {
+                state.runtime = event.target.value;
+                syncOtherInputs();
+            });
         });
         document.querySelectorAll('input[name="grill"]').forEach(function(el) {
             el.addEventListener("change", function(event) { state.grill = event.target.value; });
         });
-        els.runtime.addEventListener("change", function(event) { state.runtime = event.target.value; });
+        els.agentOther.addEventListener("input", function(event) { state.agentOther = event.target.value; });
+        els.runtimeOther.addEventListener("input", function(event) { state.runtimeOther = event.target.value; });
         els.workspaceName.addEventListener("input", function(event) { state.workspaceName = event.target.value; });
         els.purpose.addEventListener("input", function(event) { state.purpose = event.target.value; });
         els.scopeOut.addEventListener("input", function(event) { state.scopeOut = event.target.value; });
@@ -656,6 +641,8 @@
                 els.modal.setAttribute("aria-hidden", "true");
             }
         });
+
+        syncOtherInputs();
     </script>
 </body>
 </html>
