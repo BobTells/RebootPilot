@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RebootPilot &mdash; Launch Bulletin</title>
+<style>
+  :root {
+    --ink:        #1c1c1a;
+    --paper:      #f4ece0;
+    --paper-dark: #e8ddc9;
+    --olive:      #5d6840;
+    --olive-deep: #3e4729;
+    --mustard:    #b8902a;
+    --mustard-soft:#d9b04a;
+    --rust:       #8a3a23;
+    --faded-blue: #4a6a78;
+    --rule:       #2a2a26;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.55;
+    font-size: 17px;
+  }
+  .wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 32px 72px;
+  }
+  header.masthead {
+    border-top: 6px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 24px 0 18px;
+    margin-bottom: 28px;
+  }
+  .kicker {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    color: var(--olive-deep);
+  }
+  h1 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-weight: 800;
+    font-size: 52px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin: 8px 0 6px;
+  }
+  .subhead {
+    font-style: italic;
+    font-size: 19px;
+    color: var(--olive-deep);
+    margin: 0;
+  }
+  .meta {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    opacity: 0.65;
+    margin-top: 16px;
+  }
+  h2 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 13px;
+    color: var(--olive-deep);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 6px;
+    margin: 36px 0 14px;
+  }
+  p { margin: 0 0 12px; }
+  .lede {
+    font-size: 20px;
+    line-height: 1.5;
+    border-left: 4px solid var(--mustard);
+    padding: 4px 0 4px 18px;
+    margin: 0 0 22px;
+  }
+  .pull {
+    border-top: 2px solid var(--mustard);
+    border-bottom: 2px solid var(--mustard);
+    padding: 14px 24px;
+    margin: 0 auto 28px;
+    max-width: 620px;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.4;
+    color: var(--olive-deep);
+    text-align: center;
+  }
+  ul.beats {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    counter-reset: beat;
+  }
+  ul.beats li {
+    padding: 9px 0 9px 36px;
+    border-bottom: 1px dashed rgba(28,28,26,0.25);
+    position: relative;
+    font-size: 16px;
+  }
+  ul.beats li:last-child { border-bottom: none; }
+  ul.beats li::before {
+    content: counter(beat, decimal-leading-zero);
+    counter-increment: beat;
+    position: absolute;
+    left: 0;
+    top: 9px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--mustard);
+    letter-spacing: 0.08em;
+  }
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 8px 0 0;
+  }
+  .bento-card {
+    padding: 22px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 150px;
+    border: 1px solid var(--ink);
+    background: var(--paper-dark);
+    color: var(--ink);
+    transition: transform 0.15s ease;
+  }
+  .bento-card:hover { transform: translateY(-2px); }
+  .bento-card.olive { background: var(--olive-deep); color: var(--paper); border-color: var(--olive-deep); }
+  .bento-card.rust { background: var(--rust); color: var(--paper); border-color: var(--rust); }
+  .bento-card.blue { background: var(--faded-blue); color: var(--paper); border-color: var(--faded-blue); }
+  .bento-card.ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .bento-card.mustard { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+  .bento-name {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.1;
+    margin: 0 0 14px;
+    letter-spacing: -0.005em;
+  }
+  .span-2 .bento-name { font-size: 30px; }
+  .span-3 .bento-name { font-size: 32px; }
+  .bento-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .bento-cat {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    padding: 3px 7px;
+    border: 1px solid currentColor;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+
+  .invite {
+    background: var(--olive-deep);
+    color: var(--paper);
+    padding: 22px 26px;
+    margin: 28px 0 0;
+    border: 6px double var(--mustard-soft);
+  }
+  .invite h2 {
+    color: var(--mustard-soft);
+    border-bottom: 1px solid var(--mustard-soft);
+    margin-top: 0;
+  }
+  .invite p { margin-bottom: 8px; font-size: 16px; }
+
+  .signoff {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 6px solid var(--ink);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--olive-deep);
+  }
+  .signoff strong {
+    font-style: normal;
+    font-weight: 800;
+    font-size: 19px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .more {
+    margin-top: 22px;
+    text-align: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .more a {
+    color: var(--rust);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rust);
+    padding-bottom: 2px;
+  }
+  .footer {
+    margin-top: 36px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(28,28,26,0.6);
+    text-align: center;
+  }
+  @media (max-width: 760px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .span-2, .span-3 { grid-column: span 2; }
+    .span-2 .bento-name, .span-3 .bento-name { font-size: 26px; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 22px 56px; }
+    h1 { font-size: 38px; }
+    .bento { grid-template-columns: 1fr; }
+    .span-2, .span-3 { grid-column: span 1; }
+    .span-2 .bento-name, .span-3 .bento-name { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="masthead">
+      <div class="kicker">RebootPilot &middot; Launch Bulletin</div>
+      <h1>Day One.</h1>
+      <div class="meta">2026-05-08 &nbsp;&middot;&nbsp; Bob Scott &nbsp;&middot;&nbsp; charliemikebi.com</div>
+    </header>
+
+    <p class="pull">
+      "Knowledge and people first. Systems next. Technology to support the Mission."
+    </p>
+
+    <p class="lede">
+      <strong>Mission:</strong> 4 paid retainers and 1 volunteer organization. Let's get on with the work.
+    </p>
+
+    <h2>The Bet</h2>
+    <p>
+      This isn't an AI shop. It's a helper business &mdash; leadership, analytics, operations, marketing,
+      project management, customer experience. The job: bridge new tech to old systems, and lead your
+      people through what changed.
+    </p>
+    <p>
+      I want to help. Paid or not. I'd rather lift up the people doing this right than argue with anyone
+      doing it wrong. Looking for more like-minded individuals, military affiliated or not.
+    </p>
+
+    <h2>Four Beats</h2>
+    <ul class="beats">
+      <li>We're building useful stuff and sharing the ideas behind it. A spark that helps you ship is a win.</li>
+      <li>The hard part is bridging new tools and processes to the old stack you already paid for. That's where I live.</li>
+      <li>I ship the work <em>and</em> I help lead your people through what changed. Not one or the other.</li>
+      <li>One volunteer seat is reserved for an organization I'd genuinely show up for. Phone calls and short consults are always free.</li>
+    </ul>
+
+    <h2>Coming Soon</h2>
+    <div class="bento">
+      <div class="bento-card olive span-2">
+        <div class="bento-name">Project Manager App</div>
+        <div class="bento-cats">
+          <span class="bento-cat">Power Platform</span>
+          <span class="bento-cat">AI</span>
+          <span class="bento-cat">Workflow</span>
+          <span class="bento-cat">Build</span>
+        </div>
+      </div>
+      <div class="bento-card rust">
+        <div class="bento-name">Power App IDE</div>
+        <div class="bento-cats">
+          <span class="bento-cat">Tooling</span>
+          <span class="bento-cat">Power Platform</span>
+          <span class="bento-cat">Open Source</span>
+        </div>
+      </div>
+      <div class="bento-card mustard">
+        <div class="bento-name">Vibe Code Family Apps</div>
+        <div class="bento-cats">
+          <span class="bento-cat">AI</span>
+          <span class="bento-cat">LLM</span>
+          <span class="bento-cat">Build</span>
+          <span class="bento-cat">Fun</span>
+        </div>
+      </div>
+      <div class="bento-card blue">
+        <div class="bento-name">Analytics</div>
+        <div class="bento-cats">
+          <span class="bento-cat">Data</span>
+          <span class="bento-cat">Power BI</span>
+          <span class="bento-cat">Insight</span>
+        </div>
+      </div>
+      <div class="bento-card">
+        <div class="bento-name">Web Design</div>
+        <div class="bento-cats">
+          <span class="bento-cat">UX</span>
+          <span class="bento-cat">Build</span>
+          <span class="bento-cat">Brand</span>
+        </div>
+      </div>
+      <div class="bento-card ink span-2">
+        <div class="bento-name">Security &amp; Safeguards With AI</div>
+        <div class="bento-cats">
+          <span class="bento-cat">Security</span>
+          <span class="bento-cat">AI</span>
+          <span class="bento-cat">Audit</span>
+          <span class="bento-cat">Practice</span>
+        </div>
+      </div>
+      <div class="bento-card mustard">
+        <div class="bento-name">Certifications</div>
+        <div class="bento-cats">
+          <span class="bento-cat">Microsoft</span>
+          <span class="bento-cat">Google</span>
+          <span class="bento-cat">AI</span>
+          <span class="bento-cat">Power Platform</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="invite">
+      <h2>The Volunteer Seat</h2>
+      <p>
+        One of the five seats at my table is reserved for a volunteer organization &mdash; no fee, full engagement.
+        It has to be a fit: a mission I'd genuinely show up for. If you run a nonprofit, a community group, or
+        a project that's been stuck and you think AI plus old-system bridging would actually move it, write to me.
+      </p>
+      <p>
+        Reach: <strong>bob.scott@charliemikebi.com</strong> &nbsp;&middot;&nbsp; or DM on LinkedIn.
+      </p>
+    </div>
+
+    <div class="signoff">
+      <strong>&mdash; Bob Scott</strong>
+      Charlie Mike Business Intelligence &middot; RebootPilot
+      <br/>If something on this page made you curious, that was on purpose. Ask.
+    </div>
+
+    <div class="more">
+      Full plan to follow.
+    </div>
+
+    <div class="footer">
+      RebootPilot &middot; Launch Bulletin &middot; 2026-05-08
+    </div>
+
+  </div>
+</body>
+</html>
