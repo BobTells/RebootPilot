@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Brain Droppings 6 banner</title>
+  <desc id="desc">A warm editorial banner for the RebootPilot hub.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fff8e8"/>
+      <stop offset="100%" stop-color="#ead6b0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="35%" cy="28%" r="70%">
+      <stop offset="0%" stop-color="#f6c56f" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#f6c56f" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#f6c56f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <rect width="1200" height="700" fill="url(#glow)"/>
+  <g opacity="0.26" stroke="#1657c0" stroke-width="2">
+    <path d="M0 120H1200"/>
+    <path d="M0 240H1200"/>
+    <path d="M0 360H1200"/>
+    <path d="M0 480H1200"/>
+    <path d="M0 600H1200"/>
+    <path d="M120 0V700"/>
+    <path d="M320 0V700"/>
+    <path d="M520 0V700"/>
+    <path d="M720 0V700"/>
+    <path d="M920 0V700"/>
+    <path d="M1120 0V700"/>
+  </g>
+  <g transform="translate(90 120)">
+    <text x="0" y="0" fill="#103c84" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6">REBOOTPILOT</text>
+    <text x="0" y="130" fill="#1f2937" font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="700">Brain</text>
+    <text x="0" y="220" fill="#1f2937" font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="700">Droppings 6</text>
+    <text x="0" y="292" fill="#5b6470" font-family="Georgia, 'Times New Roman', serif" font-size="28">Useful first. Respectable never.</text>
+  </g>
+  <g transform="translate(820 130)">
+    <rect x="0" y="0" width="260" height="260" rx="28" fill="#fffaf0" fill-opacity="0.62" stroke="#d8ccb3"/>
+    <circle cx="128" cy="104" r="60" fill="#1657c0" fill-opacity="0.12"/>
+    <path d="M74 178h108" stroke="#1657c0" stroke-width="8" stroke-linecap="round"/>
+    <path d="M74 208h138" stroke="#a15c07" stroke-width="8" stroke-linecap="round"/>
+    <text x="48" y="98" fill="#103c84" font-family="Georgia, 'Times New Roman', serif" font-size="22" letter-spacing="2">COMMANDER</text>
+    <text x="48" y="132" fill="#103c84" font-family="Georgia, 'Times New Roman', serif" font-size="22" letter-spacing="2">OF THE HUB</text>
+  </g>
+</svg>

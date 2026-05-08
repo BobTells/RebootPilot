@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Crayon Overlord</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<section class="hero">
+  <img src="assets/brain-droppings-6-banner.png" alt="Brain Droppings 6" class="hero-image" />
+  <div class="hero-mark">Meet Brain Droppings 6</div>
+</section>
+
+<main class="deck">
+  <section class="headline-card">Tonight's lesson for adults who should know better.</section>
+  <section class="layout">
+    <article class="lesson-card">
+      <span class="eyebrow">Class #1</span>
+      <h1>Note Intake</h1>
+      <p class="lede">This version leans hard into grown-up cartoon energy while still making the prompt generator the whole point of the page.</p>
+      <div class="meta-row">
+        <span>notes</span><span>capture</span><span>workflow</span><span>medium</span>
+      </div>
+      <div class="folder-row">
+        <button class="folder folder--video" type="button" data-video-toggle>
+          <strong>Watch the bit</strong>
+          <span>Pop open the hidden video stage</span>
+        </button>
+        <button class="folder folder--tool" type="button" data-tool-toggle>
+          <strong>Use the generator</strong>
+          <span>Lift the notebook and show the tool</span>
+        </button>
+      </div>
+      <section class="video-stage" id="videoStage">
+        <div class="stage-bar"><strong>Launch video</strong><button type="button" data-close-stage="videoStage">Close</button></div>
+        <div class="video-placeholder">Hidden YouTube embed stage</div>
+      </section>
+    </article>
+
+    <aside class="side-column">
+      <div class="bubble bubble--pink"><strong>Show value</strong><p>Thicker lines, brighter shapes, and more personality without turning it into children's TV.</p></div>
+      <div class="bubble bubble--sky"><strong>Product path</strong><p>The generator rises in a notebook drawer so the launch page still feels like a set piece.</p></div>
+    </aside>
+  </section>
+</main>
+
+<div class="notebook" id="toolNotebook">
+  <div class="notebook-sheet">
+    <div class="notebook-tabs">
+      <strong>Prompt Generator</strong>
+      <div>
+        <a href="items/note-intake.html">Open full page</a>
+        <button type="button" data-close-stage="toolNotebook">Close</button>
+      </div>
+    </div>
+    <iframe title="Note Intake" data-src="items/note-intake.html"></iframe>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

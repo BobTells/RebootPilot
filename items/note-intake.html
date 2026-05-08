@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Note Intake | RebootPilot</title>
+    <meta
+        name="description"
+        content="Generate note-intake prompts for Gmail or Outlook workflows that file safely into a vault or project."
+    />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <style>
+        .tool-layout {
+            display: grid;
+            gap: 18px;
+        }
+
+        .tool-hero,
+        .tool-panel,
+        .output-modal-panel {
+            background: rgba(255, 252, 245, 0.94);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .tool-hero {
+            padding: 24px;
+        }
+
+        .tool-hero h1 {
+            margin: 0;
+            font-size: clamp(1.9rem, 4vw, 3rem);
+            color: #0f172a;
+        }
+
+        .tool-hero p {
+            margin: 10px 0 0;
+            max-width: 760px;
+            color: var(--muted);
+        }
+
+        .utility-bar {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .utility-card,
+        .tool-panel {
+            background: #fffdf8;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+        }
+
+        .utility-card {
+            padding: 14px 16px;
+        }
+
+        .utility-card strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.74rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--accent-deep);
+        }
+
+        .utility-card p,
+        .utility-card ul {
+            margin: 0;
+            color: #4b5563;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .utility-card ul {
+            padding-left: 18px;
+        }
+
+        .rating-line {
+            margin-bottom: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .tool-panel {
+            padding: 20px;
+        }
+
+        .tool-panel h2 {
+            margin: 0 0 8px;
+            font-size: 1.16rem;
+        }
+
+        .panel-intro {
+            margin: 0 0 16px;
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .pickers fieldset {
+            margin: 0 0 14px;
+            padding: 14px 14px 12px;
+            border: 1px solid #e6d7b8;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #fffdf9 0%, #fff8ea 100%);
+        }
+
+        .pickers legend {
+            padding: 0 6px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .pickers label {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 6px 0;
+            line-height: 1.42;
+            cursor: pointer;
+        }
+
+        .pickers input[type="radio"],
+        .pickers input[type="checkbox"] {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .hint {
+            display: block;
+            margin-top: 2px;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .field-block label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .text-input,
+        .select-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dbc9a3;
+            border-radius: 12px;
+            font: inherit;
+            background: #fffefb;
+            color: var(--ink);
+        }
+
+        .folder-builder {
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #dbc9a3;
+            border-radius: 14px;
+            background: #fff9ef;
+        }
+
+        .folder-builder[hidden] {
+            display: none;
+        }
+
+        .builder-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .builder-head p {
+            margin: 0;
+            font-size: 0.84rem;
+            color: var(--muted);
+        }
+
+        .builder-add,
+        .tree-node-row button,
+        .generate-btn,
+        .output-close,
+        .copy-output {
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1px solid #dbc9a3;
+            background: #fffefb;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .builder-add,
+        .copy-output {
+            background: var(--accent-soft);
+            border-color: #b7cef6;
+            color: var(--accent-deep);
+            font-weight: 700;
+        }
+
+        .builder-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tree-node {
+            border-left: 2px solid #e3d2ae;
+            padding-left: 12px;
+            margin-left: 4px;
+        }
+
+        .tree-node-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .tree-node-children {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tree-node-meta {
+            margin-top: 4px;
+            font-size: 0.76rem;
+            color: var(--muted);
+        }
+
+        .builder-preview,
+        .tool-note {
+            border-radius: 14px;
+            font-size: 0.88rem;
+        }
+
+        .builder-preview {
+            margin-top: 12px;
+            padding: 12px;
+            background: #fffefb;
+            border: 1px dashed #c8b78f;
+            color: #374151;
+            white-space: pre-wrap;
+        }
+
+        .tool-note {
+            padding: 12px 14px;
+            margin-top: 4px;
+            background: linear-gradient(180deg, #fff7e7 0%, #fff3dc 100%);
+            border: 1px dashed #c8b78f;
+            color: #374151;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .generate-btn {
+            padding: 12px 18px;
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .generate-btn:hover,
+        .copy-output:hover,
+        .builder-add:hover,
+        .tree-node-row button:hover,
+        .output-close:hover {
+            transform: translateY(-1px);
+        }
+
+        .output-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.62);
+        }
+
+        .output-modal.active {
+            display: flex;
+        }
+
+        .output-modal-panel {
+            width: min(980px, 100%);
+            max-height: 88vh;
+            overflow: auto;
+        }
+
+        .output-dialog-head {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+            background: #fffdf8;
+        }
+
+        .output-dialog-head h2 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        .output-dialog-head p {
+            margin: 2px 0 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .output-block {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .output-block:last-child {
+            border-bottom: 0;
+        }
+
+        .output-block-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .output-block h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .copy-output.copied {
+            background: #166534;
+            border-color: #166534;
+            color: #fff;
+        }
+
+        .output-pre {
+            margin: 0;
+            padding: 16px;
+            border-radius: 16px;
+            background: #101828;
+            color: #ece9e1;
+            font-family: Consolas, "SFMono-Regular", Menlo, monospace;
+            font-size: 0.84rem;
+            line-height: 1.58;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        @media (max-width: 980px) {
+            .utility-bar,
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tree-node-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <main class="tool-layout">
+            <div class="detail-head">
+                <a class="back-link" href="../index.html">Back to hub</a>
+                <p class="detail-kicker">Tool</p>
+            </div>
+
+            <section class="tool-hero">
+                <h1>Note Intake</h1>
+                <p>Build an email-based note intake setup that lands in a vault or project without turning setup into a second job. This version is the live launch piece inside RebootPilot.</p>
+            </section>
+
+            <section class="utility-bar" aria-label="Tool overview">
+                <article class="utility-card">
+                    <strong>Difficulty</strong>
+                    <div class="rating-line">Medium</div>
+                    <p>Install an app, connect an account, and tune the workflow once reality starts poking holes in it.</p>
+                </article>
+                <article class="utility-card">
+                    <strong>Core Tools</strong>
+                    <ul>
+                        <li>Claude Desktop, Antigravity, or Codex</li>
+                        <li>Gmail or Outlook</li>
+                        <li>Google Drive or OneDrive</li>
+                    </ul>
+                </article>
+                <article class="utility-card">
+                    <strong>Optional</strong>
+                    <ul>
+                        <li>Power Automate for Outlook intake</li>
+                        <li>Obsidian or another markdown viewer</li>
+                        <li>Trigger-based upstream automations</li>
+                    </ul>
+                </article>
+                <article class="utility-card">
+                    <strong>What it does</strong>
+                    <p>Email-driven intake into a vault or AI project. The folder builder is just a starting shape, not the final law of the land.</p>
+                </article>
+            </section>
+
+            <section class="tool-panel pickers">
+                <h2>Build your setup</h2>
+                <p class="panel-intro">Choose the email path, routing behavior, structure approach, and note logic. The tool will generate copy-ready prompts for your selected runtime.</p>
+
+                <fieldset>
+                    <legend>1. Email path</legend>
+                    <label><input type="radio" name="email" value="gmail" checked> <span>Gmail<span class="hint">Assistant reads the inbox directly.</span></span></label>
+                    <label><input type="radio" name="email" value="outlook"> <span>Outlook<span class="hint">Uses a small Power Automate intake step.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>2. Routing mode</legend>
+                    <label><input type="radio" name="routing" value="assist" checked> <span>Inbox + AI assist<span class="hint">Recommended. Everything lands in Inbox and the AI suggests destination, tags, and summary.</span></span></label>
+                    <label><input type="radio" name="routing" value="trigger"> <span>Trigger<span class="hint">Use a token like <code>note:[home]</code> to hint the destination up front.</span></span></label>
+                    <label><input type="radio" name="routing" value="agent"> <span>Agent handling<span class="hint">Advanced. Better after you learn your note patterns.</span></span></label>
+                    <label><input type="radio" name="routing" value="user"> <span>User handling<span class="hint">Manual review and filing. Available, but not recommended.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>3. Filing logic</legend>
+                    <label><input type="checkbox" id="confidenceGate" checked> <span>Confidence gate<span class="hint">Only suggest a destination when confidence is high. Otherwise leave it open for the user.</span></span></label>
+                    <label><input type="checkbox" id="includeTags" checked> <span>Tags<span class="hint">Recommend tags. Refine them over time as the vault matures.</span></span></label>
+                    <label><input type="checkbox" id="includeBlurb" checked> <span>One-line summary<span class="hint">Give each note a quick pickup summary that the user can override later.</span></span></label>
+                    <label><input type="checkbox" id="includeUnsure" checked> <span>Unsure handling<span class="hint">Keep ambiguous items in Inbox instead of forcing a guess.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>4. Runtime</legend>
+                    <div class="field-row">
+                        <div class="field-block">
+                            <label for="workspaceName">Workspace name</label>
+                            <input class="text-input" type="text" id="workspaceName" value="CommandersVault">
+                        </div>
+                        <div class="field-block">
+                            <label for="assistantChoice">Assistant</label>
+                            <select class="select-input" id="assistantChoice">
+                                <option value="claude">Claude Desktop</option>
+                                <option value="antigravity">Antigravity</option>
+                                <option value="codex">Codex</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>5. Destination</legend>
+                    <label><input type="radio" name="storage" value="vault-have"> <span>Existing markdown vault<span class="hint">Use a folder tree you already have.</span></span></label>
+                    <label><input type="radio" name="storage" value="vault-new" checked> <span>New vault<span class="hint">Setup will need extra instruction later.</span></span></label>
+                    <label><input type="radio" name="storage" value="project"> <span>AI project only<span class="hint">No files. We will need project-style instructions later.</span></span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>6. File setup</legend>
+                    <label><input type="radio" name="flow" value="flat" checked> <span>Flat structure<span class="hint">Start simple with a few top-level destinations like Work, Home, Ideas, or Reference.</span></span></label>
+                    <label><input type="radio" name="flow" value="assistant"> <span>Build in the assistant<span class="hint">Let the prompt help propose and refine the tree inside Claude, Antigravity, or Codex.</span></span></label>
+                    <label><input type="radio" name="flow" value="builder"> <span>Folder maker<span class="hint">Build a starter tree here. Add up to 2 child folders per branch, up to 8 levels deep. The AI can continue refining later.</span></span></label>
+                    <div class="folder-builder" id="folderBuilder" hidden>
+                        <div class="builder-head">
+                            <p>Start with top-level folders, then nest deeper only where needed. Each branch can have up to 2 children and go up to 8 levels deep.</p>
+                            <button class="builder-add" id="addRootFolder" type="button">Add root folder</button>
+                        </div>
+                        <div class="builder-tree" id="builderTree"></div>
+                        <div class="builder-preview" id="builderPreview"></div>
+                    </div>
+                </fieldset>
+
+                <div class="tool-note">Recommended path: start with Inbox + AI assist and a flatter structure. If the vault starts drifting, use the assistant to refine naming, branching, and tag rules instead of trying to over-design everything up front.</div>
+                <div class="action-row">
+                    <button class="generate-btn" id="generateOutput" type="button">Generate output</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="output-modal" id="outputModal" aria-hidden="true">
+        <div class="output-modal-panel" role="dialog" aria-modal="true" aria-labelledby="outputTitle">
+            <div class="output-dialog-head">
+                <div>
+                    <h2 id="outputTitle">Generated prompts</h2>
+                    <p id="outputSubtitle">Copy each block into your selected AI runtime.</p>
+                </div>
+                <button class="output-close" id="closeOutput" type="button">Close</button>
+            </div>
+            <div id="outputBlocks"></div>
+        </div>
+    </div>
+
+    <script>
+        const FLOWS = {
+            flat: ["Work", "Home", "Ideas", "Reference"],
+            assistant: ["Work", "Home", "Ideas", "Reference"]
+        };
+
+        let nextNodeId = 7;
+
+        const state = {
+            email: "gmail",
+            routing: "assist",
+            storage: "vault-new",
+            flow: "flat",
+            builderTree: [
+                { id: 1, name: "Work", children: [
+                    { id: 2, name: "Clients", children: [] },
+                    { id: 3, name: "Internal", children: [] }
+                ] },
+                { id: 4, name: "Home", children: [
+                    { id: 5, name: "Personal", children: [] },
+                    { id: 6, name: "Admin", children: [] }
+                ] }
+            ],
+            workspaceName: "CommandersVault",
+            assistant: "claude",
+            confidenceGate: true,
+            includeTags: true,
+            includeBlurb: true,
+            includeUnsure: true
+        };
+
+        const folderBuilder = document.getElementById("folderBuilder");
+        const builderTree = document.getElementById("builderTree");
+        const builderPreview = document.getElementById("builderPreview");
+        const addRootFolderBtn = document.getElementById("addRootFolder");
+        const workspaceNameInput = document.getElementById("workspaceName");
+        const assistantChoice = document.getElementById("assistantChoice");
+        const confidenceGateInput = document.getElementById("confidenceGate");
+        const includeTagsInput = document.getElementById("includeTags");
+        const includeBlurbInput = document.getElementById("includeBlurb");
+        const includeUnsureInput = document.getElementById("includeUnsure");
+        const generateOutputBtn = document.getElementById("generateOutput");
+        const outputModal = document.getElementById("outputModal");
+        const closeOutputBtn = document.getElementById("closeOutput");
+        const outputBlocks = document.getElementById("outputBlocks");
+        const outputSubtitle = document.getElementById("outputSubtitle");
+
+        function createNode(name) {
+            return { id: nextNodeId++, name: (name || "").trim(), children: [] };
+        }
+
+        function flattenTreePaths(nodes, prefix) {
+            const base = prefix || [];
+            return nodes.flatMap(function(node) {
+                const cleanName = (node.name || "").trim();
+                if (!cleanName) return [];
+                const next = base.concat(cleanName);
+                return [next.join("/")].concat(flattenTreePaths(node.children || [], next));
+            });
+        }
+
+        function renderTreeLines(paths, indent) {
+            const root = {};
+            paths.forEach(function(path) {
+                const parts = path.split("/").filter(Boolean);
+                let node = root;
+                parts.forEach(function(part) {
+                    if (!node[part]) node[part] = {};
+                    node = node[part];
+                });
+            });
+
+            function walk(node, depthIndent) {
+                return Object.keys(node).sort().flatMap(function(key) {
+                    return [depthIndent + "- " + key + "/"].concat(walk(node[key], depthIndent + "  "));
+                });
+            }
+
+            return walk(root, indent);
+        }
+
+        function getCategories() {
+            if (state.flow === "builder") return flattenTreePaths(state.builderTree);
+            return FLOWS[state.flow] || [];
+        }
+
+        function runtimeLabel() {
+            if (state.assistant === "antigravity") return "Antigravity";
+            if (state.assistant === "codex") return "Codex";
+            return "Claude Desktop";
+        }
+
+        function modeLabel() {
+            if (state.storage === "project") return "project/online";
+            if (state.storage === "vault-have") return "existing vault";
+            return "new vault";
+        }
+
+        function emailLabel() {
+            return state.email === "outlook" ? "Outlook" : "Gmail";
+        }
+
+        function routingLabel() {
+            if (state.routing === "trigger") return "trigger routing";
+            if (state.routing === "agent") return "agent handling";
+            if (state.routing === "user") return "user handling";
+            return "Inbox + AI assist";
+        }
+
+        function structureLabel() {
+            if (state.flow === "builder") return "folder-maker starter tree";
+            if (state.flow === "assistant") return "assistant-built structure";
+            return "flat starter structure";
+        }
+
+        function removeNodeById(nodes, id) {
+            for (let i = nodes.length - 1; i >= 0; i -= 1) {
+                if (nodes[i].id === id) {
+                    nodes.splice(i, 1);
+                    return true;
+                }
+                if (removeNodeById(nodes[i].children || [], id)) return true;
+            }
+            return false;
+        }
+
+        function renderTreeNode(node, depth) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "tree-node";
+
+            const row = document.createElement("div");
+            row.className = "tree-node-row";
+
+            const input = document.createElement("input");
+            input.className = "text-input";
+            input.placeholder = "Folder name";
+            input.value = node.name || "";
+            input.addEventListener("input", function(event) {
+                node.name = event.target.value;
+                renderBuilder();
+            });
+
+            const addChild = document.createElement("button");
+            addChild.type = "button";
+            addChild.textContent = "Add child";
+            addChild.disabled = depth >= 8 || (node.children || []).length >= 2;
+            addChild.addEventListener("click", function() {
+                if (depth < 8 && (node.children || []).length < 2) {
+                    node.children.push(createNode(""));
+                    renderUi();
+                }
+            });
+
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.textContent = "Remove";
+            remove.addEventListener("click", function() {
+                removeNodeById(state.builderTree, node.id);
+                if (!state.builderTree.length) state.builderTree.push(createNode("Work"));
+                renderUi();
+            });
+
+            row.appendChild(input);
+            row.appendChild(addChild);
+            row.appendChild(remove);
+            wrapper.appendChild(row);
+
+            const meta = document.createElement("div");
+            meta.className = "tree-node-meta";
+            meta.textContent = "Depth " + depth + " of 8" + ((node.children || []).length >= 2 ? " / max 2 children reached" : "");
+            wrapper.appendChild(meta);
+
+            if (node.children && node.children.length) {
+                const children = document.createElement("div");
+                children.className = "tree-node-children";
+                node.children.forEach(function(child) {
+                    children.appendChild(renderTreeNode(child, depth + 1));
+                });
+                wrapper.appendChild(children);
+            }
+
+            return wrapper;
+        }
+
+        function renderBuilder() {
+            if (!builderTree || !builderPreview) return;
+            builderTree.innerHTML = "";
+            state.builderTree.forEach(function(node) {
+                builderTree.appendChild(renderTreeNode(node, 1));
+            });
+
+            const preview = getCategories();
+            builderPreview.textContent = preview.length
+                ? "Current tree:\n" + [workspaceNameInput.value.trim() || "CommandersVault", "- Inbox/"]
+                    .join("/\n")
+                    .replace("/\n- Inbox/", "/\n- Inbox/")
+                    + "\n" + renderTreeLines(preview, "  ").join("\n")
+                : "Current tree:\n" + (workspaceNameInput.value.trim() || "CommandersVault") + "/\n- Inbox/\n  - Add at least one folder";
+        }
+
+        function renderUi() {
+            folderBuilder.hidden = state.flow !== "builder";
+            renderBuilder();
+        }
+
+        function selectedStructureText() {
+            const categories = getCategories();
+            if (state.flow === "builder" && categories.length) {
+                return [workspaceNameInput.value.trim() || "CommandersVault", "- Inbox/"]
+                    .join("/\n")
+                    .replace("/\n- Inbox/", "/\n- Inbox/")
+                    + "\n" + renderTreeLines(categories, "  ").join("\n");
+            }
+            return (categories.length ? categories : FLOWS.flat).map(function(item) {
+                return "- " + item + "/";
+            }).join("\n");
+        }
+
+        function sharedConfigLines() {
+            return [
+                "Selected runtime: " + runtimeLabel(),
+                "Selected mode: " + modeLabel(),
+                "Email path: " + emailLabel(),
+                "Routing mode: " + routingLabel(),
+                "Structure approach: " + structureLabel(),
+                "Confidence gate: " + (state.confidenceGate ? "on" : "off"),
+                "Tags: " + (state.includeTags ? "recommended" : "off"),
+                "One-line summary: " + (state.includeBlurb ? "on" : "off"),
+                "Unsure handling: " + (state.includeUnsure ? "on" : "off")
+            ].join("\n");
+        }
+
+        function runtimeSetupGuidance() {
+            if (state.assistant === "claude") {
+                return [
+                    "Use scoped connectors only.",
+                    "- Filesystem connector should point only at the vault or sandbox folder.",
+                    "- Gmail connector, if used, should be narrowed to the intake label/search/folder.",
+                    "- If connector scope is missing or too broad, pause and ask the user to fix it.",
+                    "- Create or update CLAUDE.md or equivalent instructions without overwriting existing guidance."
+                ].join("\n");
+            }
+            if (state.assistant === "antigravity") {
+                return [
+                    "Operate as a cautious local workspace agent.",
+                    "- Inspect the current vault tree before proposing changes.",
+                    "- Prefer reversible, small edits.",
+                    "- Leave durable workspace instructions for Prompt 2.",
+                    "- Do not mass-move, rename, delete, or rewrite notes without explicit approval."
+                ].join("\n");
+            }
+            return [
+                "Operate like a careful coding/workspace agent.",
+                "- Treat the vault as user-owned source material.",
+                "- Keep system rules explicit in markdown files.",
+                "- Record setup changes in a changelog.",
+                "- Do not delete, bulk rename, or reorganize existing notes during setup."
+            ].join("\n");
+        }
+
+        function buildVaultSetupPrompt() {
+            const sandboxOrExisting = state.storage === "vault-new"
+                ? "Assume this may start as a sandbox or fresh vault unless the user says otherwise."
+                : "Assume this is a real existing vault. Audit first, modify second.";
+            return [
+                "You are " + runtimeLabel() + " helping set up a two-prompt note intake system inside a markdown note vault.",
+                "",
+                "Your job in Prompt 1 is setup only. Do not process live notes yet. Prepare the vault, rules, templates, and operating instructions that Prompt 2 will use later.",
+                "",
+                "# Current configuration",
+                sharedConfigLines(),
+                "",
+                "# Vault setup mode",
+                sandboxOrExisting,
+                "",
+                "# Starter structure",
+                selectedStructureText(),
+                "",
+                "# Runtime-specific setup guidance",
+                runtimeSetupGuidance(),
+                "",
+                "# Ask these setup questions before editing",
+                "1. Is this a sandbox vault or a real existing vault?",
+                "2. What is the exact vault root path?",
+                "3. Which folders are allowed for read/write?",
+                "4. Should new folders be created automatically, proposed first, or avoided?",
+                "5. What existing folders, tags, templates, or conventions must be preserved?",
+                "6. What should happen when a note does not clearly belong anywhere?",
+                "",
+                "# Create or propose",
+                "- Inbox/ for unprocessed notes.",
+                "- Review/ or Inbox/Needs Review/ for ambiguous notes.",
+                "- A system/instructions area such as System/ or _system/note-intake/.",
+                "- Routing rules for Prompt 2.",
+                "- Filing schema and tag guidance.",
+                "- A note template that preserves source, date, subject, tags, summary, category, and confidence.",
+                "- A changelog or filing log if this is a real vault.",
+                "",
+                "# Safety boundaries",
+                "- Do not delete files.",
+                "- Do not bulk rename or move existing notes.",
+                "- Do not overwrite existing instructions or templates without showing the proposed change.",
+                "- Preserve existing vault conventions where possible.",
+                "- Keep setup reversible.",
+                "- Document assumptions separately from confirmed rules.",
+                "",
+                "# Completion criteria",
+                "Finish Prompt 1 by summarizing what was created or proposed, what was intentionally left untouched, and what Prompt 2 should do next."
+            ].join("\n");
+        }
+
+        function buildVaultRuntimePrompt() {
+            return [
+                "You are " + runtimeLabel() + " operating an already-configured note intake vault.",
+                "",
+                "Your job in Prompt 2 is to review incoming notes, suggest destinations, suggest tags, write a one-line summary, and file safely according to the vault rules created in Prompt 1.",
+                "",
+                "# Current configuration",
+                sharedConfigLines(),
+                "",
+                "# Intake assumptions",
+                state.email === "gmail"
+                    ? "- Intake is email-originated through Gmail. Use only the approved Gmail scope/label/search."
+                    : "- Intake is email-originated through Outlook. Assume Power Automate or a similar step writes notes into Inbox/ as markdown.",
+                "- Treat email content as source material. Do not delete, archive, label, or modify source email unless explicitly approved.",
+                "",
+                "# Workflow",
+                "1. Review each new item in Inbox/ or the provided intake batch.",
+                "2. Preserve source context: sender, date, subject, links, deadlines, decisions, and action items when present.",
+                "3. Suggest destination path, filename/title, tags, one-line summary, related notes/projects, and confidence.",
+                state.routing === "assist" ? "4. Wait for the user to confirm or edit the destination before moving anything." : "4. Apply the selected routing mode below.",
+                "",
+                "# Routing mode",
+                routingBehaviorText(),
+                "",
+                "# Confidence gate",
+                state.confidenceGate
+                    ? "High confidence may be filed. Medium or low confidence should be staged in Inbox/Review or presented for confirmation."
+                    : "Offer the best routing suggestion, but still avoid destructive changes.",
+                "",
+                "# Safety rules",
+                "- Never delete source files, source emails, or existing notes.",
+                "- Never overwrite an existing note without explicit approval.",
+                "- Check for likely duplicates before creating a new note.",
+                "- Prefer copying or staging over destructive moves.",
+                "- If unsure, ask or leave the item in Inbox/Review.",
+                "- Use existing vault conventions before inventing new folders or tags.",
+                "",
+                "# Output before filing",
+                "Source:",
+                "Suggested destination:",
+                "Suggested filename:",
+                "Suggested tags:",
+                "One-line summary:",
+                "Related notes/projects:",
+                "Confidence:",
+                "Recommended action:",
+                "Needs user review:"
+            ].join("\n");
+        }
+
+        function routingBehaviorText() {
+            if (state.routing === "trigger") {
+                return [
+                    "Respect trigger hints such as note:[home], note:[work], note:[project-name], or similar patterns.",
+                    "Treat the trigger as a strong routing hint, but validate it against the vault structure before moving.",
+                    "If the target is missing or ambiguous, ask before creating or moving."
+                ].join("\n");
+            }
+            if (state.routing === "agent") {
+                return [
+                    "Act as a cautious maintenance agent.",
+                    "Propose structure, tag, and naming refinements over time.",
+                    "Do not auto-restructure the vault without approval."
+                ].join("\n");
+            }
+            if (state.routing === "user") {
+                return [
+                    "Treat filing as manual.",
+                    "Show options and let the user choose the destination before anything moves."
+                ].join("\n");
+            }
+            return [
+                "Use Inbox + AI assist.",
+                "Everything starts in Inbox/.",
+                "Suggest destination, tags, and summary.",
+                "User confirms or edits before filing."
+            ].join("\n");
+        }
+
+        function buildProjectInstructions() {
+            return [
+                "Create a new project/chat workspace in " + runtimeLabel() + ".",
+                "",
+                "# Human setup steps",
+                "1. Create a project named " + (workspaceNameInput.value.trim() || "CommandersVault") + ".",
+                "2. Paste the project prompt into the project instructions or first message.",
+                "3. Use the project as the review and organization layer for email-originated notes.",
+                "4. Start with one short sample note before using it heavily.",
+                "5. Come back and refine tags, categories, and structure if the system starts drifting.",
+                "",
+                "# Suggested starter structure",
+                selectedStructureText()
+            ].join("\n");
+        }
+
+        function buildProjectPrompt() {
+            return [
+                "You are my note intake and organization assistant inside this project.",
+                "",
+                "# Current configuration",
+                sharedConfigLines(),
+                "",
+                "# Your job",
+                "Help me process email-originated notes. A note may have started somewhere else upstream, but in this demo it arrives through Gmail or Outlook.",
+                "",
+                "# Workflow",
+                "1. Read each note I paste or provide.",
+                "2. Suggest a destination/category from the current structure.",
+                state.includeTags ? "3. Suggest 1-3 tags that fit the existing pattern." : "3. Do not add tags unless I ask.",
+                state.includeBlurb ? "4. Write a one-line summary for quick pickup later." : "4. Keep the note concise without adding a summary field.",
+                "5. Ask me to confirm or edit before finalizing the filing decision.",
+                "",
+                "# Routing behavior",
+                routingBehaviorText(),
+                "",
+                "# Confidence behavior",
+                state.confidenceGate
+                    ? "If confidence is medium or low, say so and give me 1-3 options instead of pretending you know."
+                    : "If confidence is low, still explain your uncertainty.",
+                "",
+                "# Safety",
+                "Never delete notes unless I explicitly tell you to. Do not invent a complex taxonomy too early. Help me refine structure and tags over time."
+            ].join("\n");
+        }
+
+        function generateBlocks() {
+            if (state.storage === "project") {
+                return [
+                    { title: "Project instructions", body: buildProjectInstructions() },
+                    { title: "Project prompt", body: buildProjectPrompt() }
+                ];
+            }
+            return [
+                { title: "Prompt 1: Build/setup the vault", body: buildVaultSetupPrompt() },
+                { title: "Prompt 2: Run note intake", body: buildVaultRuntimePrompt() }
+            ];
+        }
+
+        function openOutput() {
+            const blocks = generateBlocks();
+            outputBlocks.innerHTML = "";
+            outputSubtitle.textContent = state.storage === "project"
+                ? "Project mode gives you setup instructions plus one project prompt."
+                : "Vault mode gives you two prompts: setup first, intake second.";
+
+            blocks.forEach(function(block) {
+                const blockEl = document.createElement("section");
+                blockEl.className = "output-block";
+
+                const head = document.createElement("div");
+                head.className = "output-block-head";
+
+                const title = document.createElement("h3");
+                title.textContent = block.title;
+
+                const copy = document.createElement("button");
+                copy.className = "copy-output";
+                copy.type = "button";
+                copy.textContent = "Copy";
+                copy.addEventListener("click", async function() {
+                    try {
+                        await navigator.clipboard.writeText(block.body);
+                        copy.classList.add("copied");
+                        copy.textContent = "Copied";
+                        setTimeout(function() {
+                            copy.classList.remove("copied");
+                            copy.textContent = "Copy";
+                        }, 1500);
+                    } catch (err) {
+                        copy.textContent = "Copy failed";
+                    }
+                });
+
+                const pre = document.createElement("pre");
+                pre.className = "output-pre";
+                pre.textContent = block.body;
+
+                head.appendChild(title);
+                head.appendChild(copy);
+                blockEl.appendChild(head);
+                blockEl.appendChild(pre);
+                outputBlocks.appendChild(blockEl);
+            });
+
+            outputModal.classList.add("active");
+            outputModal.setAttribute("aria-hidden", "false");
+        }
+
+        document.querySelectorAll('input[name="email"]').forEach(function(el) {
+            el.addEventListener("change", function(event) {
+                state.email = event.target.value;
+            });
+        });
+        document.querySelectorAll('input[name="routing"]').forEach(function(el) {
+            el.addEventListener("change", function(event) {
+                state.routing = event.target.value;
+            });
+        });
+        document.querySelectorAll('input[name="storage"]').forEach(function(el) {
+            el.addEventListener("change", function(event) {
+                state.storage = event.target.value;
+            });
+        });
+        document.querySelectorAll('input[name="flow"]').forEach(function(el) {
+            el.addEventListener("change", function(event) {
+                state.flow = event.target.value;
+                renderUi();
+            });
+        });
+        addRootFolderBtn.addEventListener("click", function() {
+            state.builderTree.push(createNode(""));
+            renderUi();
+        });
+        workspaceNameInput.addEventListener("input", function(event) {
+            state.workspaceName = event.target.value;
+            renderBuilder();
+        });
+        assistantChoice.addEventListener("change", function(event) {
+            state.assistant = event.target.value;
+        });
+        confidenceGateInput.addEventListener("change", function(event) {
+            state.confidenceGate = event.target.checked;
+        });
+        includeTagsInput.addEventListener("change", function(event) {
+            state.includeTags = event.target.checked;
+        });
+        includeBlurbInput.addEventListener("change", function(event) {
+            state.includeBlurb = event.target.checked;
+        });
+        includeUnsureInput.addEventListener("change", function(event) {
+            state.includeUnsure = event.target.checked;
+        });
+        generateOutputBtn.addEventListener("click", openOutput);
+        closeOutputBtn.addEventListener("click", function() {
+            outputModal.classList.remove("active");
+            outputModal.setAttribute("aria-hidden", "true");
+        });
+        outputModal.addEventListener("click", function(event) {
+            if (event.target === outputModal) {
+                outputModal.classList.remove("active");
+                outputModal.setAttribute("aria-hidden", "true");
+            }
+        });
+
+        renderUi();
+    </script>
+</body>
+</html>
