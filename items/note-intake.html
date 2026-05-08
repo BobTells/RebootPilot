@@ -75,8 +75,11 @@
 
         .output-block{padding:22px;border-bottom:3px solid var(--line)}
         .output-block:last-child{border-bottom:0}
-        .output-block-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-        .output-block h3{margin:0;font-family:Impact,Haettenschweiler,sans-serif;font-size:1.15rem;text-transform:uppercase;letter-spacing:.02em}
+        .block-step{display:inline-block;margin-bottom:10px;padding:6px 14px;border:2px solid var(--line);border-radius:999px;background:var(--gold);color:var(--ink);font-family:"Helvetica Neue",Arial,sans-serif;font-size:.74rem;font-weight:900;text-transform:uppercase;letter-spacing:.16em;box-shadow:3px 3px 0 var(--line)}
+        .output-block-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+        .output-block-title{flex:1 1 280px;min-width:240px}
+        .output-block h3{margin:0;font-family:Impact,Haettenschweiler,sans-serif;font-size:1.5rem;text-transform:uppercase;letter-spacing:.02em;line-height:1}
+        .output-block-sub{margin:6px 0 0;font-size:.92rem;line-height:1.45;color:var(--muted)}
         .output-pre{margin:0;padding:18px;border:2px solid var(--line);border-radius:14px;background:#101216;color:#ece9e1;font-family:Consolas,"SFMono-Regular",Menlo,monospace;font-size:.84rem;line-height:1.58;white-space:pre-wrap;word-break:break-word}
 
         @media(max-width:980px){.utility-bar,.field-row{grid-template-columns:1fr}.tool-hero h1{font-size:2.2rem}}
@@ -93,7 +96,7 @@
 
             <section class="tool-hero">
                 <h1>The Markdown Files</h1>
-                <p><strong>Same idea as the note Bub gave Murillo.</strong> One small file the agent reads every turn, that tells it everything important &mdash; who you are, how you work, what&rsquo;s in scope. Generate the two prompts to bootstrap yours: a grill-me interview that locks the spec, then a write step. CLAUDE.md, AGENTS.md, or whatever your runtime calls it.</p>
+                <p><strong>Same idea as the note Bub gave SFC Murillo.</strong> One small file the agent reads every turn, that tells it everything important &mdash; who you are, how you work, what&rsquo;s in scope. Generate the two prompts to bootstrap yours: a grill-me interview that locks the spec, then a write step. CLAUDE.md, AGENTS.md, or whatever your runtime calls it.</p>
             </section>
 
             <section class="utility-bar" aria-label="Tool overview">
@@ -107,12 +110,12 @@
                     <ul>
                         <li>Claude / Codex / Antigravity / your pick</li>
                         <li>grill-me skill (github.com/mattpocock/skills)</li>
-                        <li>A markdown editor</li>
                     </ul>
                 </article>
                 <article class="utility-card">
                     <strong>Optional</strong>
                     <ul>
+                        <li>A markdown editor</li>
                         <li>Existing CLAUDE.md / AGENTS.md to extend</li>
                         <li>A repo to commit the system into</li>
                     </ul>
@@ -358,14 +361,6 @@
             ].join("\n");
         }
 
-        function feedbackSection() {
-            return [
-                "",
-                "# Feedback (please)",
-                "This generator is in active refinement. If you spot anything weird about this prompt — bad assumptions, missing rounds, output that surprised you, or a tip that made it run better — send it back to droppingsbrain6@gmail.com. Every reply sharpens the next version."
-            ].join("\n");
-        }
-
         function buildBootstrapPrompt() {
             return [
                 "You are " + agentLabel() + " running in " + runtimeLabel() + ", bootstrapping a persistent-context markdown system.",
@@ -386,8 +381,7 @@
                 "- Keep the persistent-context surface minimal. If something doesn't need to be loaded every turn, document it in a separate file and reference it.",
                 "",
                 "# Done when",
-                "Done when the user confirms (a) the spec summary, (b) the file diffs (or pasteable content for online projects), and (c) any open questions are resolved. Output a one-paragraph handoff describing what was created and how to use it in subsequent sessions.",
-                feedbackSection()
+                "Done when the user confirms (a) the spec summary, (b) the file diffs (or pasteable content for online projects), and (c) any open questions are resolved. Output a one-paragraph handoff describing what was created and how to use it in subsequent sessions."
             ].join("\n");
         }
 
@@ -410,15 +404,14 @@
                 "- Only on user request.",
                 "- For substantial additions, re-run the bootstrap (with grill-me) instead of patching ad hoc.",
                 "- Show diffs (or proposed pasteable text for online projects) before writing or replacing.",
-                "- Keep the always-loaded surface lean. If a new addition doesn't need every turn, put it in a referenced file or skill, not in the main context file.",
-                feedbackSection()
+                "- Keep the always-loaded surface lean. If a new addition doesn't need every turn, put it in a referenced file or skill, not in the main context file."
             ].join("\n");
         }
 
         function generateBlocks() {
             return [
-                { title: "Bootstrap prompt — paste at start of a fresh session", body: buildBootstrapPrompt() },
-                { title: "Operational prompt — for sessions after the system is set up", body: buildOperationalPrompt() }
+                { step: "Step 1 of 2", title: "Bootstrap prompt", sub: "Paste at the start of a fresh session — grills you for the spec, then writes the file.", body: buildBootstrapPrompt() },
+                { step: "Step 2 of 2", title: "Operational prompt", sub: "For every session after setup — the agent reads the file you wrote in Step 1.", body: buildOperationalPrompt() }
             ];
         }
 
@@ -429,11 +422,25 @@
                 const blockEl = document.createElement("section");
                 blockEl.className = "output-block";
 
+                const stepPill = document.createElement("span");
+                stepPill.className = "block-step";
+                stepPill.textContent = block.step;
+
                 const head = document.createElement("div");
                 head.className = "output-block-head";
 
+                const titleWrap = document.createElement("div");
+                titleWrap.className = "output-block-title";
+
                 const title = document.createElement("h3");
                 title.textContent = block.title;
+
+                const sub = document.createElement("p");
+                sub.className = "output-block-sub";
+                sub.textContent = block.sub;
+
+                titleWrap.appendChild(title);
+                titleWrap.appendChild(sub);
 
                 const copy = document.createElement("button");
                 copy.className = "copy-output";
@@ -457,8 +464,9 @@
                 pre.className = "output-pre";
                 pre.textContent = block.body;
 
-                head.appendChild(title);
+                head.appendChild(titleWrap);
                 head.appendChild(copy);
+                blockEl.appendChild(stepPill);
                 blockEl.appendChild(head);
                 blockEl.appendChild(pre);
                 els.blocks.appendChild(blockEl);
